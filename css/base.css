@@ -1,0 +1,98 @@
+:root {
+  --bg: #000;
+  --surface: #161616;
+  --surface-2: #242424;
+  --line: #2a2a2a;
+  --text: #fff;
+  --muted: #a3a3a3;
+  --yellow: #ffd20a;
+  --yellow-hover: #ffe04d;
+  --header-h: 72px;
+  --tabbar-h: 64px;
+  --font: 'Sora', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--header-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 500;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { display: block; max-width: 100%; }
+
+/* No blue/grey flash when tapping on touch screens */
+a, button, .btn, .nav__link, .tag, .dropdown__item {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+/* Stops hidden/off-screen elements (like the closed dropdown) from causing sideways scroll */
+main { overflow-x: hidden; overflow-x: clip; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+ul { list-style: none; margin: 0; padding: 0; }
+h1, h2, p { margin: 0; }
+
+:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; }
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 40px);
+}
+
+/* Buttons (sizes shrink smoothly on small screens) */
+.btn {
+  --btn-h: clamp(40px, 11.5vw, 48px);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 2vw, 10px);
+  height: var(--btn-h);
+  padding: 0 clamp(16px, 5vw, 24px);
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: clamp(.78rem, 3.6vw, 1rem);
+  white-space: nowrap;
+  transition: background-color .15s, color .15s, transform .15s;
+}
+.btn svg { width: clamp(16px, 4.8vw, 20px); height: clamp(16px, 4.8vw, 20px); flex: none; }
+.btn:active { transform: scale(.96); }
+.btn--primary { background: var(--yellow); color: #000; }
+.btn--primary:hover { background: var(--yellow-hover); }
+.btn--primary:focus-visible { outline-color: #fff; }
+.btn--dark { background: var(--surface-2); color: #fff; }
+.btn--dark:hover { background: #333; }
+.btn--icon { width: var(--btn-h); padding: 0; background: var(--surface-2); }
+.btn--icon:hover { background: #333; }
+.btn--icon.is-done { background: var(--yellow); color: #000; }
+
+/* Keeps a button and its dropdown arrow together on one line */
+.btn-group { display: inline-flex; align-items: center; gap: clamp(6px, 2vw, 8px); }
+
+/* Temporary section stubs */
+.stub { min-height: 70vh; padding-block: 64px; border-top: 1px solid var(--line); }
+.stub h2 { font-size: 2rem; font-weight: 800; }
+
+@media (max-width: 760px) {
+  body { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 16px); }
+  html { scroll-padding-bottom: calc(var(--tabbar-h) + 16px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

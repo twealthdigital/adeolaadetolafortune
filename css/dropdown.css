@@ -1,0 +1,79 @@
+/* Reusable dropdown. Markup: see js/components/dropdown.js */
+.dropdown { position: relative; display: inline-flex; flex: none; }
+
+.dropdown__trigger svg { transition: transform .2s ease; }
+.dropdown.is-open .dropdown__trigger svg { transform: rotate(180deg); }
+.dropdown.is-open .dropdown__trigger { background: var(--yellow); color: #000; }
+
+.dropdown__menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 40;
+  width: max-content;
+  min-width: 220px;
+  max-width: calc(100vw - 24px);
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .65);
+  text-align: left;
+
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(var(--dx, 0px), -6px) scale(.97);
+  transform-origin: top left;
+  transition: opacity .15s ease, transform .15s ease, visibility 0s linear .15s;
+}
+.dropdown.is-open .dropdown__menu {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(var(--dx, 0px), 0) scale(1);
+  transition: opacity .15s ease, transform .15s ease, visibility 0s;
+}
+.dropdown.is-up .dropdown__menu {
+  top: auto;
+  bottom: calc(100% + 10px);
+  transform-origin: bottom left;
+  transform: translate(var(--dx, 0px), 6px) scale(.97);
+}
+.dropdown.is-up.is-open .dropdown__menu { transform: translate(var(--dx, 0px), 0) scale(1); }
+
+.dropdown__label {
+  padding: 8px 12px 4px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.dropdown__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 12px;
+  font-size: .95rem;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+  color: #fff;
+  transition: background-color .12s, color .12s;
+}
+.dropdown__item svg { width: 18px; height: 18px; flex: none; color: var(--yellow); }
+.dropdown__item:hover,
+.dropdown__item:focus-visible { background: var(--surface-2); outline: 0; }
+.dropdown__item:focus-visible { box-shadow: inset 0 0 0 2px var(--yellow); }
+.dropdown__item.is-done { color: var(--yellow); }
+
+.dropdown__sep { height: 1px; margin: 6px 4px; background: var(--line); }
+
+@media (max-width: 420px) {
+  .dropdown__menu { min-width: 200px; }
+  .dropdown__item { padding: 10px; font-size: .9rem; }
+}

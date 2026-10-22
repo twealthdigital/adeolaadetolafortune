@@ -1,0 +1,192 @@
+.services { padding-block: clamp(24px, 4vw, 48px) clamp(48px, 8vw, 96px); }
+
+/* Solid dark panel */
+.services__panel {
+  --pad: clamp(20px, 3.5vw, 40px);
+  padding: var(--pad);
+  background: var(--surface);
+  border-radius: clamp(24px, 3vw, 36px);
+}
+
+.services__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.services__title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+.services__title span { color: var(--yellow); }
+.services__intro { max-width: 38ch; color: var(--muted); font-size: .9rem; }
+
+/* Carousel */
+.carousel { margin-top: clamp(20px, 3vw, 32px); }
+
+.carousel__viewport {
+  overflow: hidden;
+  touch-action: pan-y;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.carousel.is-dragging .carousel__viewport { cursor: grabbing; }
+
+.carousel__track {
+  --gap: clamp(12px, 2vw, 20px);
+  position: relative;
+  display: flex;
+  gap: var(--gap);
+  transition: transform .6s cubic-bezier(.65, 0, .15, 1);
+  will-change: transform;
+}
+
+/* Controls: arrows (desktop only) + dots */
+.carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+.carousel__arrow {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  background: var(--surface-2);
+  color: #fff;
+  border-radius: 50%;
+  transition: background-color .2s, color .2s, transform .15s;
+}
+.carousel__arrow svg { width: 20px; height: 20px; }
+.carousel__arrow:hover { background: var(--yellow); color: #000; }
+.carousel__arrow:active { transform: scale(.92); }
+
+.carousel__dots { display: flex; align-items: center; gap: 2px; }
+.carousel__dot { position: relative; width: 24px; height: 24px; }
+.carousel__dot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: #444;
+  transform: translate(-50%, -50%);
+  transition: width .3s, background-color .3s;
+}
+.carousel__dot:hover::after { background: #777; }
+.carousel__dot.is-active::after { width: 28px; background: var(--yellow); }
+
+.services__foot { display: flex; justify-content: center; margin-top: 20px; }
+.btn--lg { height: 56px; padding: 0 40px; font-size: 1.05rem; }
+
+/* Cards */
+.svc {
+  --card: var(--surface-2);
+  --card-ink: #fff;
+  --line-in: #3a3a3a;
+  flex: 0 0 calc((100% - 2 * var(--gap)) / 3);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  background: var(--card);
+  color: var(--card-ink);
+  border-radius: 22px;
+  transition: background-color .35s, color .35s;
+}
+.svc__label {
+  margin: 0;
+  padding: 4px 4px 14px;
+  border-bottom: 1px solid var(--line-in);
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  transition: border-color .35s;
+}
+
+/* Image stage with stacked layers behind the image */
+.svc__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: clamp(200px, 22vw, 260px);
+  background: #e9e9e9;
+  border-radius: 18px;
+}
+.svc__stage::before,
+.svc__stage::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 78%;
+  height: 70%;
+  border-radius: 12px;
+  box-shadow: 0 4px 14px rgb(0 0 0 / .12);
+}
+.svc__stage::before { top: 14%; transform: translateX(-50%) scale(.86); background: #d2d2d2; }
+.svc__stage::after  { top: 20%; transform: translateX(-50%) scale(.93); background: #f7f7f7; }
+
+.svc__img {
+  position: relative;
+  z-index: 1;
+  width: 82%;
+  height: auto;
+  margin-top: 14%;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / .18);
+  pointer-events: none;
+  -webkit-user-drag: none;
+  transition: transform .35s cubic-bezier(.2, .7, .2, 1);
+}
+.svc:hover .svc__img { transform: translateY(-6px); }
+
+/* Arrow button, notched into the corner using a ring in the card colour */
+.svc__go {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  background: #2b2b2b;
+  color: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 0 8px var(--card);
+  transition: background-color .2s, color .2s, box-shadow .35s, transform .15s;
+}
+.svc__go svg { width: 22px; height: 22px; }
+.svc__go:hover { background: var(--yellow); color: #000; }
+.svc__go:active { transform: scale(.92); }
+
+/* The card in the middle is solid yellow */
+.svc.is-active {
+  --card: var(--yellow);
+  --card-ink: #000;
+  --line-in: rgb(0 0 0 / .18);
+}
+.svc.is-active .svc__go { background: #000; color: var(--yellow); }
+.svc.is-active .svc__go:hover { background: #fff; color: #000; }
+
+/* Tablet and mobile: one card at a time with the neighbours peeking, swipe to move, no arrows */
+@media (max-width: 900px) {
+  .carousel__viewport { margin-inline: calc(var(--pad) * -1); }
+  .svc { flex-basis: 64%; }
+  .svc__stage { height: 240px; }
+  .carousel__arrow { display: none; }
+}
+@media (max-width: 560px) {
+  .svc { flex-basis: 82%; }
+  .btn--lg { width: 100%; }
+}

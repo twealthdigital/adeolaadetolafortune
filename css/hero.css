@@ -1,0 +1,141 @@
+.hero { padding-block: clamp(32px, 6vw, 72px) clamp(48px, 8vw, 96px); }
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: clamp(24px, 4vw, 56px);
+  align-items: center;
+}
+
+/* Avatar with rotating segmented ring */
+.avatar { position: relative; width: clamp(150px, 24vw, 260px); aspect-ratio: 1; }
+.avatar__ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  animation: ring-spin 48s linear infinite;
+}
+.avatar__ring circle {
+  fill: none;
+  stroke: var(--yellow);
+  stroke-width: 1.8;
+  stroke-dasharray: 3 1;
+}
+.avatar__img {
+  position: absolute;
+  inset: 6%;
+  width: 88%;
+  height: 88%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--yellow);
+}
+@keyframes ring-spin { to { transform: rotate(360deg); } }
+
+/* Info */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  font-size: .85rem;
+  font-weight: 700;
+}
+.status__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--yellow); }
+
+.hero__name {
+  display: flex;
+  align-items: center;
+  gap: .3em;
+  font-size: clamp(2.25rem, 6vw, 4rem);
+  line-height: 1;
+  font-weight: 800;
+  letter-spacing: -.04em;
+}
+.hero__moon { width: .75em; height: .75em; color: var(--yellow); }
+.hero__handle { margin-top: 8px; color: var(--muted); font-weight: 600; }
+
+.hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: clamp(8px, 2.4vw, 12px); margin-top: 24px; }
+
+.hero__headline {
+  margin-top: 24px;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  line-height: 1.2;
+  font-weight: 800;
+  letter-spacing: -.02em;
+  color: var(--yellow);
+}
+
+.hero__bio {
+  max-width: 52ch;
+  margin-top: 12px;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 500;
+  color: #d4d4d4;
+}
+
+.hero__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: var(--yellow);
+  font-weight: 700;
+}
+.hero__link svg { width: 18px; height: 18px; }
+.hero__link:hover { color: var(--yellow-hover); }
+
+.tags { display: flex; flex-wrap: wrap; gap: clamp(6px, 1.8vw, 8px); margin-top: 24px; }
+.tag { padding: 6px clamp(10px, 3vw, 14px); border-radius: 999px; background: var(--surface-2); font-size: clamp(.72rem, 3.1vw, .85rem); font-weight: 700; white-space: nowrap; }
+
+/* Mobile: everything centered, TikTok style */
+@media (max-width: 760px) {
+  .hero__grid { grid-template-columns: minmax(0, 1fr); justify-items: center; text-align: center; gap: 20px; }
+  .hero__name { justify-content: center; }
+  .hero__actions, .tags { justify-content: center; }
+  .hero__bio { margin-inline: auto; }
+}
+
+
+
+
+
+/* Tags marquee: mobile / large phones only */
+.tag--clone { display: none; }
+
+@media (max-width: 760px) {
+  .hero__info { width: 100%; min-width: 0; }
+
+  .tags-wrap {
+    width: 100%;
+    margin-top: 24px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .tags {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: max-content;
+    margin-top: 0;
+    padding-right: clamp(6px, 1.8vw, 8px); /* same as gap, keeps the loop seamless */
+    animation: tags-scroll 20s linear infinite;
+  }
+  .tag--clone { display: block; }
+  .tags-wrap:hover .tags,
+  .tags-wrap:active .tags { animation-play-state: paused; }
+}
+
+@keyframes tags-scroll { to { transform: translateX(-50%); } }
+
+/* Users who turned off motion get a plain swipeable row instead */
+@media (max-width: 760px) and (prefers-reduced-motion: reduce) {
+  .tags-wrap { overflow-x: auto; }
+  .tag--clone { display: none; }
+}
