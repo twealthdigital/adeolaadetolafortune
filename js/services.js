@@ -52,10 +52,27 @@ export function initServicesCarousel() {
     return viewport.clientWidth / 2 - (s.offsetLeft + s.offsetWidth / 2);
   };
 
+  // The yellow only appears once the card has stopped in the middle.
+  // Every new move or drag cancels it, so fast swiping never flashes yellow on the cards passing by.
+  const SETTLE_MS = 750; // slide time (.6s) + a short pause
+  let settleTimer = null;
+  const applyActive = () => {
+    clearTimeout(settleTimer);
+    slides.forEach((s, i) => s.classList.toggle('is-active', i === pos));
+  };
+  const clearActive = () => {
+    clearTimeout(settleTimer);
+    slides.forEach(s => s.classList.remove('is-active'));
+  };
+  const queueActive = () => {
+    clearTimeout(settleTimer);
+    settleTimer = setTimeout(applyActive, SETTLE_MS);
+  };
+
   const render = animate => {
     track.style.transition = animate ? '' : 'none';
     track.style.transform = `translate3d(${offsetFor(pos)}px, 0, 0)`;
-    slides.forEach((s, i) => s.classList.toggle('is-active', i === pos));
+    if (animate) { clearActive(); queueActive(); } else { applyActive(); }
     dots.forEach((d, i) => {
       const on = i === logical();
       d.classList.toggle('is-active', on);
@@ -127,6 +144,7 @@ export function initServicesCarousel() {
       moved = true;
       viewport.setPointerCapture(e.pointerId);
       root.classList.add('is-dragging');
+      clearActive();
       track.style.transition = 'none';
     }
     if (moved) track.style.transform = `translate3d(${startOffset + dx}px, 0, 0)`;

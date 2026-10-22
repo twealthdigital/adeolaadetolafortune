@@ -34,7 +34,7 @@ export function mountHeader(target = '#site-header') {
     <header class="header">
       <div class="container header__inner">
         <a class="header__logo" href="/" aria-label="!Fortune home">
-          <img src="/assets/images/logo-if.png" alt="!F logo, yellow exclamation mark beside a white F on black" width="44" height="44">
+          <img src="/assets/images/logo-if.webp" alt="!F logo, yellow exclamation mark beside a white F on black" width="44" height="44">
         </a>
 
         <nav class="nav" aria-label="Main">

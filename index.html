@@ -21,6 +21,14 @@
   <link rel="stylesheet" href="/css/dropdown.css">
   <link rel="stylesheet" href="/css/services.css">
 
+  <link rel="modulepreload" href="/js/main.js">
+  <link rel="modulepreload" href="/js/components/header.js">
+  <link rel="modulepreload" href="/js/components/dropdown.js">
+  <link rel="modulepreload" href="/js/navigation.js">
+  <link rel="modulepreload" href="/js/services.js">
+  <link rel="preload" as="image" href="/assets/images/fortune-portrait.webp">
+  <link rel="preload" as="image" href="/assets/images/logo-if.webp">
+
   <script type="module" src="/js/main.js"></script>
 </head>
 <body data-page="landing">
@@ -36,7 +44,7 @@
           <svg class="avatar__ring" viewBox="0 0 100 100" aria-hidden="true">
             <circle cx="50" cy="50" r="48.5" pathLength="96"/>
           </svg>
-          <img class="avatar__img" src="/assets/images/fortune-portrait.png"
+          <img class="avatar__img" src="/assets/images/fortune-portrait.webp"
                alt="Fortune, black and white portrait on a yellow background"
                width="400" height="400" fetchpriority="high">
         </div>

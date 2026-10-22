@@ -24,7 +24,7 @@
   line-height: 1.1;
 }
 .services__title span { color: var(--yellow); }
-.services__intro { max-width: 38ch; color: var(--muted); font-size: .9rem; }
+.services__intro { flex: 1 1 320px; max-width: 90ch; margin-left: auto; color: var(--muted); font-size: .9rem; }
 
 /* Carousel */
 .carousel { margin-top: clamp(20px, 3vw, 32px); }
