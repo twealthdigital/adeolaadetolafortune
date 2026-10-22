@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="/css/hero.css">
   <link rel="stylesheet" href="/css/dropdown.css">
   <link rel="stylesheet" href="/css/services.css">
+  <link rel="stylesheet" href="/css/about.css">
 
   <link rel="modulepreload" href="/js/main.js">
   <link rel="modulepreload" href="/js/components/header.js">
@@ -61,7 +62,7 @@
             <svg class="hero__moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 14.5A9 9 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"/></svg>
           </h1>
 
-          <p class="hero__headline">I build intelligent digital products.</p>
+          <p class="hero__headline">I build intelligent digital solutions.</p>
           <p class="hero__bio">AI-powered websites, mobile applications, and automations that help businesses solve problems, operate smarter, and grow faster.</p>
 
           <div class="hero__actions">
@@ -145,7 +146,7 @@
                 </li>
 
                 <li class="svc">
-                  <h3 class="svc__label">AI Engineering</h3>
+                  <h3 class="svc__label">AI / Software Engineering</h3>
                   <div class="svc__stage">
                     <img class="svc__img" src="/assets/images/services.images/ai.png" alt="Preview of an AI chat product built by Fortune" width="480" height="300" loading="lazy" draggable="false">
                     <button class="svc__go" type="button" aria-label="Explore AI Engineering">
@@ -155,7 +156,7 @@
                 </li>
 
                 <li class="svc">
-                  <h3 class="svc__label">Mobile Apps</h3>
+                  <h3 class="svc__label">Mobile App Development</h3>
                   <div class="svc__stage">
                     <img class="svc__img" src="/assets/images/services.images/mobile.png" alt="Preview of a mobile app built by Fortune" width="480" height="300" loading="lazy" draggable="false">
                     <button class="svc__go" type="button" aria-label="Explore Mobile Apps">
@@ -165,9 +166,32 @@
                 </li>
 
                 <li class="svc">
+                  <h3 class="svc__label">UI/UX</h3>
+                  <div class="svc__stage">
+                    <img class="svc__img" src="/assets/images/services.images/mobile.png" alt="Preview of a mobile app built by Fortune" width="480" height="300" loading="lazy" draggable="false">
+                    <button class="svc__go" type="button" aria-label="Explore Mobile Apps">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                    </button>
+                  </div>
+                </li>
+
+                <li class="svc">
+                  <h3 class="svc__label">Video Editing</h3>
+                  <div class="svc__stage">
+                    <img class="svc__img" src="/assets/images/fortune-portrait.webp" alt="Preview of a mobile app built by Fortune" width="480" height="300" loading="lazy" draggable="false">
+                    <img class="svc__img" src="/assets/images/fortune-portrait.webp" alt="Preview of a mobile app built by Fortune" width="480" height="300" loading="lazy" draggable="false">
+                    <img class="svc__img" src="/assets/images/logo-if.webp" alt="Preview of a mobile app built by Fortune" width="480" height="300" loading="lazy" draggable="false">
+
+                    <button class="svc__go" type="button" aria-label="Explore Video Editing     ">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                    </button>
+                  </div>
+                </li>
+
+                <li class="svc">
                   <h3 class="svc__label">Automation</h3>
                   <div class="svc__stage">
-                    <img class="svc__img" src="/assets/images/services.images/automation.png" alt="Preview of an automation workflow built by Fortune" width="480" height="300" loading="lazy" draggable="false">
+                    <img class="svc__img" src="/assets/images/fortune-portrait.webp" alt="Preview of an automation workflow built by Fortune" width="480" height="300" loading="lazy" draggable="false">
                     <button class="svc__go" type="button" aria-label="Explore Automation">
                       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
                     </button>
@@ -199,7 +223,68 @@
       </div>
     </section>
     <!-- Temporary stubs so the nav bar has sections to move between. Replace one by one. -->
-    <section class="stub" id="about"><div class="container"><h2>About</h2></div></section>
+    <section class="about" id="about">
+      <div class="container">
+
+        <header class="about__head">
+          <p class="about__tag"><i></i> About me</p>
+          <h2 class="about__title">Building the <span>future</span>, one product at a time.</h2>
+        </header>
+
+        <div class="about__layout">
+
+          <!-- Left: bio -->
+          <div class="about__col about__col--left">
+            <article class="hud">
+              <span class="hud__label">01 / Profile</span>
+              <p>I'm <strong>Adeola Adetola Fortune</strong>. I build AI-powered websites, mobile applications and automations that help businesses solve problems, operate smarter and grow faster.</p>
+            </article>
+            <article class="hud">
+              <span class="hud__label">02 / Mission</span>
+              <p>I take an idea from first sketch to a live product, with clean code, sharp design and automation that saves you time.</p>
+            </article>
+          </div>
+
+          <!-- Centre: me -->
+          <figure class="about__me">
+            <div class="about__rings" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div class="about__frame">
+              <img src="/assets/images/fortune-portrait.webp" alt="Portrait of Adeola Adetola Fortune" width="520" height="693" loading="lazy">
+              <span class="about__scan" aria-hidden="true"></span>
+            </div>
+            <span class="about__chip about__chip--a"><b>●</b> System online</span>
+            <span class="about__chip about__chip--b">AI · Web · Mobile</span>
+          </figure>
+
+          <!-- Right: accomplishments -->
+          <div class="about__col about__col--right">
+            <div class="about__stats">
+              <div class="hud stat">
+                <div class="stat__num"><b data-count="4">4</b><em>+</em></div>
+                <p>Years of experience</p>
+                <span class="stat__bar"><i style="--fill:40%"></i></span>
+              </div>
+              <div class="hud stat">
+                <div class="stat__num"><b data-count="30">30</b><em>+</em></div>
+                <p>Projects delivered</p>
+                <span class="stat__bar"><i style="--fill:75%"></i></span>
+              </div>
+              <div class="hud stat">
+                <div class="stat__num"><b data-count="15">15</b><em>+</em></div>
+                <p>Happy clients</p>
+                <span class="stat__bar"><i style="--fill:60%"></i></span>
+              </div>
+              <div class="hud stat">
+                <div class="stat__num"><b data-count="3">3</b></div>
+                <p>Core services</p>
+                <span class="stat__bar"><i style="--fill:100%"></i></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
     <section class="stub" id="experience"><div class="container"><h2>Experience</h2></div></section>
     <section class="stub" id="contact"><div class="container"><h2>Contact</h2></div></section>
   </main>

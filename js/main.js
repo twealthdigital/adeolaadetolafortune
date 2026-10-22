@@ -2,6 +2,7 @@ import { mountHeader } from './components/header.js';
 import { initDropdowns } from './components/dropdown.js';
 import { initNav } from './navigation.js';
 import { initServicesCarousel } from './services.js';
+import { initAbout } from './about.js';
 
 mountHeader('#site-header');
 
@@ -23,6 +24,7 @@ mountHeader('#site-header');
 })();
 initNav();
 initServicesCarousel();
+initAbout();
 initDropdowns();
 
 // Dropdown actions (items with data-action="...")
