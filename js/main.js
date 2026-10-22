@@ -4,6 +4,23 @@ import { initNav } from './navigation.js';
 import { initServicesCarousel } from './services.js';
 
 mountHeader('#site-header');
+
+// Loading screen: fades out once the page and fonts are ready (shows for at least 600ms so it never just flashes)
+(() => {
+  const loader = document.getElementById('loader');
+  if (!loader) return;
+  const MIN_MS = 600;
+  const t0 = performance.now();
+  const loaded = document.readyState === 'complete'
+    ? Promise.resolve()
+    : new Promise(r => addEventListener('load', r, { once: true }));
+  Promise.all([loaded, document.fonts?.ready]).then(() => {
+    setTimeout(() => {
+      loader.classList.add('is-done');
+      setTimeout(() => loader.remove(), 500);
+    }, Math.max(0, MIN_MS - (performance.now() - t0)));
+  });
+})();
 initNav();
 initServicesCarousel();
 initDropdowns();

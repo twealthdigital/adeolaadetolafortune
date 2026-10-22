@@ -14,6 +14,45 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* Loading screen */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  background: #000;
+  transition: opacity .4s ease, visibility .4s;
+  animation: loader-failsafe 0s 6s forwards; /* if JS ever fails, it hides itself after 6s */
+}
+.loader.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader__mark {
+  font-family: var(--font);
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.04em;
+  color: #fff;
+  animation: loader-pulse 1.2s ease-in-out infinite;
+}
+.loader__mark span { color: var(--yellow); }
+.loader__bar { position: relative; width: 110px; height: 3px; overflow: hidden; border-radius: 3px; background: #242424; }
+.loader__bar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  border-radius: 3px;
+  background: var(--yellow);
+  animation: loader-slide 1s ease-in-out infinite;
+}
+@keyframes loader-pulse { 50% { transform: scale(.92); opacity: .75; } }
+@keyframes loader-slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+@keyframes loader-failsafe { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--header-h);
