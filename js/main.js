@@ -9,7 +9,7 @@ mountHeader('#site-header');
 (() => {
   const loader = document.getElementById('loader');
   if (!loader) return;
-  const MIN_MS = 600;
+  const MIN_MS = 1200;
   const t0 = performance.now();
   const loaded = document.readyState === 'complete'
     ? Promise.resolve()
