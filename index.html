@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="/css/dropdown.css">
   <link rel="stylesheet" href="/css/services.css">
   <link rel="stylesheet" href="/css/about.css">
+  <link rel="stylesheet" href="/css/experience.css">
 
   <link rel="modulepreload" href="/js/main.js">
   <link rel="modulepreload" href="/js/components/header.js">
@@ -214,7 +215,7 @@
 
           <div class="services__foot">
             <button class="btn btn--primary btn--lg" type="button">
-              View all services
+              View all my services
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
             </button>
           </div>
@@ -222,70 +223,220 @@
         </div>
       </div>
     </section>
-    <!-- Temporary stubs so the nav bar has sections to move between. Replace one by one. -->
-    <section class="about" id="about">
+    <section class="about" id="about" aria-labelledby="about-title">
       <div class="container">
+        <div class="about__panel">
 
-        <header class="about__head">
-          <p class="about__tag"><i></i> About me</p>
-          <h2 class="about__title">Building the <span>future</span>, one product at a time.</h2>
-        </header>
-
-        <div class="about__layout">
-
-          <!-- Left: bio -->
-          <div class="about__col about__col--left">
-            <article class="hud">
-              <span class="hud__label">01 / Profile</span>
-              <p>I'm <strong>Adeola Adetola Fortune</strong>. I build AI-powered websites, mobile applications and automations that help businesses solve problems, operate smarter and grow faster.</p>
-            </article>
-            <article class="hud">
-              <span class="hud__label">02 / Mission</span>
-              <p>I take an idea from first sketch to a live product, with clean code, sharp design and automation that saves you time.</p>
-            </article>
+          <div class="about__head">
+            <h2 class="about__title" id="about-title">About <span>Me</span></h2>
           </div>
 
-          <!-- Centre: me -->
-          <figure class="about__me">
-            <div class="about__rings" aria-hidden="true"><i></i><i></i><i></i></div>
-            <div class="about__frame">
-              <img src="/assets/images/fortune-portrait.webp" alt="Portrait of Adeola Adetola Fortune" width="520" height="693" loading="lazy">
-              <span class="about__scan" aria-hidden="true"></span>
-            </div>
-            <span class="about__chip about__chip--a"><b>●</b> System online</span>
-            <span class="about__chip about__chip--b">AI · Web · Mobile</span>
-          </figure>
+          <div class="about__body">
+            <p class="about__headline">Turning ideas into <span>Problem solving </span>opportunities.</p>
+            <p class="about__text">My name is Fortune, am a CERTIFIED Software engineer passionate about building websites, mobile applications, and AI-driven solutions that solve real world modern day problems. I combine creativity, software development, and artificial intelligence to turn ideas into positive opportunities.</p>
 
-          <!-- Right: accomplishments -->
-          <div class="about__col about__col--right">
-            <div class="about__stats">
-              <div class="hud stat">
-                <div class="stat__num"><b data-count="4">4</b><em>+</em></div>
-                <p>Years of experience</p>
-                <span class="stat__bar"><i style="--fill:40%"></i></span>
-              </div>
-              <div class="hud stat">
-                <div class="stat__num"><b data-count="30">30</b><em>+</em></div>
-                <p>Projects delivered</p>
-                <span class="stat__bar"><i style="--fill:75%"></i></span>
-              </div>
-              <div class="hud stat">
-                <div class="stat__num"><b data-count="15">15</b><em>+</em></div>
-                <p>Happy clients</p>
-                <span class="stat__bar"><i style="--fill:60%"></i></span>
-              </div>
-              <div class="hud stat">
-                <div class="stat__num"><b data-count="3">3</b></div>
-                <p>Core services</p>
-                <span class="stat__bar"><i style="--fill:100%"></i></span>
-              </div>
-            </div>
+            <a class="btn btn--primary btn--lg" href="/about.html">
+              Read More About Me
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
           </div>
 
         </div>
       </div>
     </section>
-    <section class="stub" id="experience"><div class="container"><h2>Experience</h2></div></section>
+    <section class="xp" id="experience" aria-labelledby="xp-title">
+      <div class="container">
+        <div class="xp__shell">
+
+          <div class="xp__head">
+            <h2 class="xp__title" id="xp-title">My <span>Experience</span></h2>
+          </div>
+
+          <div class="xp__grid">
+
+          <aside class="xp__side">
+            <div class="xp__intro">
+              <p class="xp__headline">Experience that <span>speaks</span> through the work.</p>
+              <p class="xp__lead">A timeline of the projects, skills, and practical experience shaping my journey as an AI-powered engineer.</p>
+            </div>
+            <a class="btn btn--primary btn--lg xp__cta" href="#services">
+              Explore My Work
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+            </a>
+          </aside>
+
+          <div class="xp__panel" data-xp-panel tabindex="0" role="region" aria-label="Experience timeline, scrolls automatically">
+            <div class="xp__track">
+              <ol class="xp__list" data-xp-list>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 1 of 10: AI-Powered Web Development"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t1">
+                <div class="xp__top">
+                  <span class="xp__num">01</span>
+                  <p class="xp__cat">Independent Development</p>
+                </div>
+                <h3 class="xp__name" id="xp-t1">AI-Powered Web Development</h3>
+                <p class="xp__desc">Building responsive websites and digital products using modern web technologies and AI-assisted development workflows.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>Responsive Web</li>
+                  <li>Modern Web Technologies</li>
+                  <li>AI-Assisted Workflows</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 2 of 10: ACCOOM"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t2">
+                <div class="xp__top">
+                  <span class="xp__num">02</span>
+                  <p class="xp__cat">Accommodation Marketplace</p>
+                </div>
+                <h3 class="xp__name" id="xp-t2">ACCOOM</h3>
+                <p class="xp__desc">Developing a student-focused accommodation platform designed to connect property seekers with agents through property listings, property details, saved listings, and communication features.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>Marketplace</li>
+                  <li>Property Listings</li>
+                  <li>Saved Listings</li>
+                  <li>Messaging</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 3 of 10: YTReak Global Technology"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t3">
+                <div class="xp__top">
+                  <span class="xp__num">03</span>
+                  <p class="xp__cat">Technology Website</p>
+                </div>
+                <h3 class="xp__name" id="xp-t3">YTReak Global Technology</h3>
+                <p class="xp__desc">Creating a digital presence for technology services focused on website design, AI integrations, and mobile application development.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>Website Design</li>
+                  <li>AI Integrations</li>
+                  <li>Mobile Apps</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 4 of 10: MM Beauty &amp; Care"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t4">
+                <div class="xp__top">
+                  <span class="xp__num">04</span>
+                  <p class="xp__cat">Beauty E-commerce</p>
+                </div>
+                <h3 class="xp__name" id="xp-t4">MM Beauty &amp; Care</h3>
+                <p class="xp__desc">Working on an online beauty and personal-care shopping experience featuring product categories, product discovery, brand storytelling, and shopping-focused pages.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>E-commerce</li>
+                  <li>Product Discovery</li>
+                  <li>Brand Storytelling</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 5 of 10: NullCipher Security"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t5">
+                <div class="xp__top">
+                  <span class="xp__num">05</span>
+                  <p class="xp__cat">Cybersecurity Website</p>
+                </div>
+                <h3 class="xp__name" id="xp-t5">NullCipher Security</h3>
+                <p class="xp__desc">Building a professional online presence for a cybersecurity brand, presenting its security services, technical expertise, and engagement pathways.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>Brand Presence</li>
+                  <li>Services Presentation</li>
+                  <li>Web Design</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 6 of 10: Nexa Infra"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t6">
+                <div class="xp__top">
+                  <span class="xp__num">06</span>
+                  <p class="xp__cat">Infrastructure Website</p>
+                </div>
+                <h3 class="xp__name" id="xp-t6">Nexa Infra</h3>
+                <p class="xp__desc">Developing a digital presence for an infrastructure-focused business, organizing its brand presentation and services into a clear website experience.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>Brand Presentation</li>
+                  <li>Information Structure</li>
+                  <li>Web Design</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 7 of 10: JAAM Power Washing"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t7">
+                <div class="xp__top">
+                  <span class="xp__num">07</span>
+                  <p class="xp__cat">Service Business Website</p>
+                </div>
+                <h3 class="xp__name" id="xp-t7">JAAM Power Washing</h3>
+                <p class="xp__desc">Creating a web presence for an exterior-cleaning business, presenting its services and helping potential customers understand how to get in touch.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>Service Pages</li>
+                  <li>Lead Generation</li>
+                  <li>Responsive Web</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 8 of 10: Business Solutions Academy"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t8">
+                <div class="xp__top">
+                  <span class="xp__num">08</span>
+                  <p class="xp__cat">Education &amp; Coaching Website</p>
+                </div>
+                <h3 class="xp__name" id="xp-t8">Business Solutions Academy</h3>
+                <p class="xp__desc">Building a digital experience for a coaching business, presenting educational programs, course offerings, and clear pathways for prospective clients.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>Education Platform</li>
+                  <li>Course Presentation</li>
+                  <li>User Pathways</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 9 of 10: Blegab"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t9">
+                <div class="xp__top">
+                  <span class="xp__num">09</span>
+                  <p class="xp__cat">E-commerce Website</p>
+                </div>
+                <h3 class="xp__name" id="xp-t9">Blegab</h3>
+                <p class="xp__desc">Working on an online shopping experience focused on presenting products clearly and creating a straightforward path from browsing to purchase.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>E-commerce</li>
+                  <li>Product Presentation</li>
+                  <li>Checkout Flow</li>
+                </ul>
+              </article>
+            </li>
+            <li class="xp__item">
+              <button class="xp__dot" type="button" data-xp-dot aria-label="Go to experience 10 of 10: AI Integration &amp; Automation"></button>
+              <article class="xp__card" tabindex="-1" aria-labelledby="xp-t10">
+                <div class="xp__top">
+                  <span class="xp__num">10</span>
+                  <p class="xp__cat">AI Engineering</p>
+                </div>
+                <h3 class="xp__name" id="xp-t10">AI Integration &amp; Automation</h3>
+                <p class="xp__desc">Exploring ways to integrate AI into software products and streamline workflows, combining development tools, APIs, and automation-oriented thinking.</p>
+                <ul class="xp__skills" aria-label="Skills">
+                  <li>AI Integration</li>
+                  <li>APIs</li>
+                  <li>Automation</li>
+                </ul>
+              </article>
+            </li>
+              </ol>
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
     <section class="stub" id="contact"><div class="container"><h2>Contact</h2></div></section>
   </main>
 
