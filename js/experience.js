@@ -13,13 +13,55 @@ const bezier = (x1, y1, x2, y2) => t => {
 };
 const ease = bezier(.65, 0, .15, 1);
 
+// Years of experience gauge. The number comes from a start date, so it goes up on its own every year.
+const GAUGE_MAX = 10;   // how many years fill the whole arc
+function initYears(root) {
+  const el = root.querySelector('[data-xp-years]');
+  if (!el) return;
+  const [Y, M, D] = el.dataset.since.split('-').map(Number);
+  const now = new Date();
+  let years = now.getFullYear() - Y;
+  if (now < new Date(now.getFullYear(), M - 1, D)) years--;
+  years = Math.max(0, years);
+  el.setAttribute('aria-label', `${years} years of experience`);
+
+  const num = el.querySelector('[data-xp-years-num]');
+  const fill = el.querySelector('.xp__g-fill');
+  const dot = el.querySelector('.xp__g-dot');
+  const goal = Math.min(years / GAUGE_MAX, 1);
+
+  const paint = p => {                      // p goes from 0 to 1 while it animates
+    const f = goal * p;
+    fill.style.strokeDashoffset = String(100 - f * 100);
+    const a = Math.PI * (1 - f);
+    dot.setAttribute('cx', (60 + 40 * Math.cos(a)).toFixed(2));
+    dot.setAttribute('cy', (60 - 40 * Math.sin(a)).toFixed(2));
+    num.textContent = Math.round(years * p);
+  };
+
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { paint(1); return; }
+  paint(0);
+  const run = () => {
+    const t0 = performance.now();
+    const frame = now => {
+      const p = Math.min(1, (now - t0) / 1400);
+      paint(ease(p));
+      if (p < 1) requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  };
+  new IntersectionObserver(([e], o) => { if (e.isIntersecting) { o.disconnect(); run(); } }, { threshold: 0.6 }).observe(el);
+}
+
 export function initExperience() {
   const root = document.querySelector('.xp');
   const panel = root?.querySelector('[data-xp-panel]');
   const list = root?.querySelector('[data-xp-list]');
   if (!root || !panel || !list) return;
+  initYears(root);
 
   const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const mq = matchMedia('(max-width: 900px)');   // stacked layout: a plain list that ends
   const real = [...list.querySelectorAll('.xp__item')];
   const N = real.length;
   real.forEach((li, i) => { li.dataset.i = i; });
@@ -69,7 +111,7 @@ export function initExperience() {
     const tallest = Math.max(...cards.map(c => c.offsetHeight));
     root.style.setProperty('--xp-card-h', tallest + 'px');
     const old = H;
-    H = real[0].offsetTop - before[0].offsetTop;
+    H = mq.matches ? 1 : real[0].offsetTop - before[0].offsetTop;
     if (!old) panel.scrollTop = H - padTop(); else if (old !== H) panel.scrollTop *= H / old;
   };
 
@@ -91,6 +133,10 @@ export function initExperience() {
   // Jump back by one list-height when we get near either end (looks identical, so nobody sees it).
   const wrap = () => {
     if (!H || busy) return;
+    if (mq.matches) {
+      if (panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 2) activate(real[N - 1]);
+      return;
+    }
     const t = panel.scrollTop;
     const shift = t >= 2 * H ? -H : t <= 1 ? H : 0;
     if (!shift) return;
@@ -175,13 +221,18 @@ export function initExperience() {
   // Move to a card (dots and keys). Mouse takes the closest copy, keyboard keeps the real focusable one.
   const goTo = (i, byKey) => {
     const copies = [before[i], real[i], after[i]];
-    const li = byKey ? real[i] : copies.reduce((a, b) =>
+    const li = (byKey || mq.matches) ? real[i] : copies.reduce((a, b) =>
       Math.abs(targetOf(b) - panel.scrollTop) < Math.abs(targetOf(a) - panel.scrollTop) ? b : a);
     hold(AUTOPLAY_MS + 2000);
     move(li);
   };
 
   const step = () => {
+    if (mq.matches) {                                   // stacked layout: no endless loop, so rewind to the first card after the last
+      const at = real.indexOf(currentEl);
+      move(real[at > -1 && at < N - 1 ? at + 1 : 0]);
+      return;
+    }
     const next = all[all.indexOf(currentEl) + 1] || real[0];
     move(next);
   };
@@ -230,6 +281,7 @@ export function initExperience() {
   document.fonts?.ready.then(() => { lastW = 0; measure(); });
   root.classList.add('is-ready');
   measure();
+  mq.addEventListener('change', () => { H = 0; lastW = 0; measure(); activate(real[0]); });
   activate(real[0]);
   requestAnimationFrame(tick);
 }
