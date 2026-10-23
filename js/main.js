@@ -3,6 +3,7 @@ import { initDropdowns } from './components/dropdown.js';
 import { initNav } from './navigation.js';
 import { initServicesCarousel } from './services.js';
 import { initExperience } from './experience.js';
+import { initContact } from './contact.js';
 
 mountHeader('#site-header');
 
@@ -25,6 +26,7 @@ mountHeader('#site-header');
 initNav();
 initServicesCarousel();
 initExperience();
+initContact();
 initDropdowns();
 
 // Dropdown actions (items with data-action="...")
@@ -73,3 +75,5 @@ document.addEventListener('dropdown:select', async e => {
     tags.appendChild(clone);
   });
 })();
+
+ 

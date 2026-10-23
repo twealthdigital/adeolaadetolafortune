@@ -1,0 +1,150 @@
+/* CONTACT: same panel style as About / Experience */
+.contact { padding-block: clamp(24px, 4vw, 48px) clamp(48px, 8vw, 96px); }
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 380px) minmax(0, 1fr);
+  gap: clamp(16px, 2.5vw, 28px);
+  align-items: start;
+}
+
+.contact__card {
+  --pad: clamp(20px, 3.5vw, 40px);
+  padding: var(--pad);
+  background: var(--surface);
+  border-radius: clamp(24px, 3vw, 36px);
+  min-width: 0;
+}
+
+/* Left: info card */
+.contact__info-title {
+  font-size: clamp(1.25rem, 2.2vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.15;
+  margin: 0;
+}
+.contact__info-title span { color: var(--yellow); }
+.contact__info-text { margin-top: 12px; color: var(--muted); font-size: .92rem; line-height: 1.7; }
+
+.contact__list { margin-top: 20px; }
+.contact__list li + li { border-top: 1px solid var(--line); }
+.contact__item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 0;
+  min-width: 0;
+}
+a.contact__item { transition: transform .15s; }
+a.contact__item:hover { transform: translateX(4px); }
+a.contact__item:hover b { color: var(--yellow); }
+
+.contact__icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: #000;
+}
+.contact__icon svg { width: 20px; height: 20px; }
+
+.contact__item-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.contact__item-text small { color: var(--muted); font-size: .78rem; font-weight: 600; }
+.contact__item-text b { font-size: .95rem; font-weight: 700; overflow-wrap: anywhere; transition: color .15s; }
+.contact__gold { color: var(--yellow); font-weight: 800; }
+
+/* Right: form card (heading = same look as "My Experience") */
+.contact__head { padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+.contact__title {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -.02em;
+  line-height: 1.1;
+}
+.contact__title span { color: var(--yellow); }
+
+.contact__lead {
+  max-width: 62ch;
+  margin-top: clamp(16px, 2.5vw, 24px);
+  color: var(--muted);
+  font-size: clamp(.92rem, 1.6vw, 1.02rem);
+  line-height: 1.7;
+}
+
+.contact__form { display: flex; flex-direction: column; gap: 14px; margin-top: clamp(18px, 2.5vw, 26px); }
+.contact__row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.contact__form input,
+.contact__form select,
+.contact__form textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 14px 18px;
+  font: inherit;
+  font-size: .92rem;
+  color: #fff;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  transition: border-color .15s, background-color .15s;
+}
+.contact__form textarea { resize: vertical; min-height: 130px; }
+.contact__form select { appearance: none; cursor: pointer; }
+.contact__form select:has(option[value=""]:checked) { color: var(--muted); }
+.contact__form select option { color: #fff; background: var(--surface-2); }
+.contact__form ::placeholder { color: var(--muted); opacity: 1; }
+.contact__form input:focus,
+.contact__form select:focus,
+.contact__form textarea:focus { outline: none; border-color: var(--yellow); }
+
+.contact__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 4px; }
+.contact__note { font-size: .85rem; color: var(--muted); }
+.contact__note.is-success { color: var(--yellow); }
+.contact__note.is-error { color: #ff6b6b; }
+
+@media (max-width: 900px) {
+  .contact__grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .contact__row { grid-template-columns: 1fr; }
+  .contact__actions .btn { width: 100%; }
+}
+
+
+/* Left column wrapper: info card + social icons stacked */
+.contact__side {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(16px, 2.5vw, 28px);
+  min-width: 0;
+}
+
+/* Email: slightly smaller so it stays on one line */
+.contact__item-text .contact__email { font-size: .88rem; }
+
+/* Social icons: solid yellow circles, always one row */
+.contact__card.contact__social {
+  padding: clamp(16px, 2.5vw, 22px);
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 8px;
+}
+.contact__soc {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  max-width: 44px;
+  aspect-ratio: 1;
+  justify-self: center;
+  border-radius: 50%;
+  background: var(--yellow);
+  color: #000;
+  transition: background-color .15s, transform .15s;
+}
+.contact__soc:hover { background: var(--yellow-hover); transform: translateY(-3px); }
+.contact__soc:active { transform: scale(.94); }
+.contact__soc svg { width: 46%; height: 46%; }
