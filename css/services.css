@@ -191,14 +191,14 @@
   .btn--lg { width: 100%; }
 }
 
-/* Fanned image stack: 3 images fitted inside the box, centre one in front */
+/* Fanned image stack: any <img> inside a card fans out automatically */
 .svc__stage::before,
 .svc__stage::after { display: none; }
 
-.svc__stack { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-.svc__stack .svc__img {
+.svc__stage > .svc__img {
   position: absolute;
   bottom: 8%;
+  left: 25%;
   width: 50%;
   height: 76%;
   margin: 0;
@@ -209,11 +209,15 @@
   box-shadow: 0 8px 22px rgb(0 0 0 / .22);
   transition: transform .45s cubic-bezier(.2, .7, .2, 1), filter .45s;
 }
-.svc__img--1 { left: 25%; z-index: 3; transform: translateY(-4%); }
-.svc__img--2 { left: 8%;  z-index: 2; transform: rotate(-8deg); filter: brightness(.85); }
-.svc__img--3 { left: 42%; z-index: 1; transform: rotate(8deg);  filter: brightness(.85); }
+.svc__stage > .svc__img:nth-of-type(1) { z-index: 3; transform: translateY(-4%); }
+.svc__stage > .svc__img:nth-of-type(2) { z-index: 2; left: 8%;  transform: rotate(-8deg); filter: brightness(.85); }
+.svc__stage > .svc__img:nth-of-type(3) { z-index: 1; left: 42%; transform: rotate(8deg);  filter: brightness(.85); }
+.svc__stage > .svc__img:nth-of-type(n+4) { display: none; }
+
+/* Arrow button always stays on top of the images */
+.svc__stage .svc__go { z-index: 5; }
 
 /* Hover: the fan opens a little wider */
-.svc:hover .svc__img--1 { transform: translateY(-7%); }
-.svc:hover .svc__img--2 { transform: translateX(-4%) rotate(-12deg); }
-.svc:hover .svc__img--3 { transform: translateX(4%) rotate(12deg); }
+.svc:hover .svc__stage > .svc__img:nth-of-type(1) { transform: translateY(-7%); }
+.svc:hover .svc__stage > .svc__img:nth-of-type(2) { transform: translateX(-4%) rotate(-12deg); }
+.svc:hover .svc__stage > .svc__img:nth-of-type(3) { transform: translateX(4%) rotate(12deg); }
