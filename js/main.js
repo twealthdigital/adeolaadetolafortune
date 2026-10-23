@@ -29,6 +29,9 @@ initExperience();
 initContact();
 initDropdowns();
 
+// Footer year: updates itself every January
+document.querySelectorAll('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
+
 // Dropdown actions (items with data-action="...")
 document.addEventListener('dropdown:select', async e => {
   const { action, item } = e.detail;
