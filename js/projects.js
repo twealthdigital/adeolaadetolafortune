@@ -1,1 +1,0 @@
-// Projects grid goes here (next step).
