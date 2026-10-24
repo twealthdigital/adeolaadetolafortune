@@ -20,8 +20,21 @@ const ICONS = {
   external: '<path d="M7 17 17 7M9 7h8v8"/>',
   check: '<path d="m5 12 5 5 9-9"/>',
   file: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5"/>',
-  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'
+  eye: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
+  panel: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M9 4v16"/>',
+  chevronL: '<path d="m15 6-6 6 6 6"/>'
 };
+
+// Same service icons as the website
+const SVC_ICONS = {
+  web: '<path fill-rule="evenodd" d="M5 4h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3zM4 9h16V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v2z"/>',
+  ai: '<path d="M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z"/>',
+  mobile: '<path fill-rule="evenodd" d="M8 2h8a3 3 0 0 1 3 3v14a3 3 0 0 1-3 3H8a3 3 0 0 1-3-3V5a3 3 0 0 1 3-3zm4 16.2a1.2 1.2 0 1 0 0 2.4 1.2 1.2 0 0 0 0-2.4zM8 5v11h8V5H8z"/>',
+  uiux: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>',
+  video: '<path fill-rule="evenodd" d="M5 4h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3zm5 4.5v7l6-3.5-6-3.5z"/>',
+  automation: '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/>'
+};
+export const svcIcon = name => `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${SVC_ICONS[name] || SVC_ICONS.web}</svg>`;
 export const icon = name => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ''}</svg>`;
 
 /* ---------- paths: "services.0.samples.2.title" ---------- */
@@ -68,20 +81,48 @@ export function preview(src) {
 const hint = h => (h ? `<small class="f__hint">${esc(h)}</small>` : '');
 const asAttr = as => (as ? ` data-as="${as}"` : '');
 
-export const text = ({ label, path, v, as, type = 'text', ph = '', hint: h = '', list = '' }) => `
+const ico = (name, cls) => icon(name).replace('<svg ', `<svg class="${cls}" `);
+
+export const text = ({ label, path, v, as, type = 'text', ph = '', hint: h = '', options }) => {
+  const input = `<input type="${type}" data-path="${path}"${asAttr(as)} value="${esc(show(v, as))}" placeholder="${esc(ph)}" autocomplete="off" aria-label="${esc(label)}">`;
+  if (!options) return `
   <label class="f"><span class="f__label">${esc(label)}</span>
-    <input type="${type}" data-path="${path}"${asAttr(as)} value="${esc(show(v, as))}" placeholder="${esc(ph)}"${list ? ` list="${list}"` : ''} autocomplete="off">
+    ${input}
     ${hint(h)}</label>`;
+  return `
+  <div class="f"><span class="f__label">${esc(label)}</span>
+    <div class="dd dd--combo" data-dd>
+      ${input}
+      <button type="button" class="ib dd__toggle" tabindex="-1" aria-label="Show suggestions" aria-expanded="false">${icon('down')}</button>
+      <div class="dd__menu" role="listbox">
+        ${options.map(o => `<button type="button" class="dd__opt" role="option" data-v="${esc(o)}"><span>${esc(o)}</span></button>`).join('')}
+        <p class="dd__empty"${options.length ? ' hidden' : ''}>${options.length ? 'No match. Keep typing to make a new one.' : 'Nothing saved yet. Type to make a new one.'}</p>
+      </div>
+    </div>
+    ${hint(h)}</div>`;
+};
 
 export const area = ({ label, path, v, as, rows = 3, ph = '', hint: h = '' }) => `
   <label class="f"><span class="f__label">${esc(label)}</span>
     <textarea data-path="${path}"${asAttr(as)} rows="${rows}" placeholder="${esc(ph)}">${esc(show(v, as))}</textarea>
     ${hint(h)}</label>`;
 
-export const pick = ({ label, path, v, options, hint: h = '' }) => `
-  <label class="f"><span class="f__label">${esc(label)}</span>
-    <select data-path="${path}">${options.map(([val, name]) => `<option value="${esc(val)}"${val === v ? ' selected' : ''}>${esc(name)}</option>`).join('')}</select>
-    ${hint(h)}</label>`;
+export const pick = ({ label, path, v, options, hint: h = '' }) => {
+  const cur = options.find(o => o[0] === v) || options[0];
+  const badge = o => (o[2] ? `<span class="dd__ico">${svcIcon(o[2])}</span>` : '');
+  return `
+  <div class="f"><span class="f__label">${esc(label)}</span>
+    <div class="dd" data-dd>
+      <input type="hidden" data-path="${path}" value="${esc(cur[0])}">
+      <button type="button" class="dd__btn" aria-haspopup="listbox" aria-expanded="false" aria-label="${esc(label)}">
+        <span class="dd__val">${badge(cur)}<span>${esc(cur[1])}</span></span>${ico('down', 'dd__chev')}
+      </button>
+      <div class="dd__menu" role="listbox">
+        ${options.map(o => `<button type="button" class="dd__opt" role="option" data-v="${esc(o[0])}" aria-selected="${o[0] === cur[0]}">${badge(o)}<span>${esc(o[1])}</span>${ico('check', 'dd__check')}</button>`).join('')}
+      </div>
+    </div>
+    ${hint(h)}</div>`;
+};
 
 // Upload a file OR paste a link. Both end up in the same text box.
 export const file = ({ label, path, v, accept = '', hint: h = '' }) => `
@@ -248,3 +289,100 @@ export function bindForm(root, ctx) {
     if (e.target.open) ctx.open.add(key); else ctx.open.delete(key);
   }, true);
 }
+
+
+/* ---------- custom dropdowns (replace <select> and <datalist>) ---------- */
+const closeDd = d => {
+  d.classList.remove('is-open', 'is-up');
+  d.querySelector('.dd__btn, .dd__toggle')?.setAttribute('aria-expanded', 'false');
+};
+const closeAllDd = except => document.querySelectorAll('[data-dd].is-open').forEach(d => { if (d !== except) closeDd(d); });
+
+function filterDd(d, q) {
+  q = q.trim().toLowerCase();
+  let shown = 0;
+  d.querySelectorAll('.dd__opt').forEach(o => {
+    const hit = !q || o.textContent.toLowerCase().includes(q);
+    o.hidden = !hit;
+    if (hit) shown++;
+  });
+  const empty = d.querySelector('.dd__empty');
+  if (empty) empty.hidden = shown > 0;
+}
+
+function openDd(d, filter = '') {
+  closeAllDd(d);
+  if (d.classList.contains('dd--combo')) filterDd(d, filter);
+  d.classList.remove('is-up');
+  const menu = d.querySelector('.dd__menu');
+  const room = innerHeight - d.getBoundingClientRect().bottom - (innerWidth < 800 ? 88 : 16);
+  const need = Math.min(menu.scrollHeight, 260) + 12;
+  if (room < need && d.getBoundingClientRect().top > need) d.classList.add('is-up');
+  d.classList.add('is-open');
+  d.querySelector('.dd__btn, .dd__toggle')?.setAttribute('aria-expanded', 'true');
+}
+
+function chooseDd(d, opt) {
+  const input = d.querySelector('input');
+  input.value = opt.dataset.v;
+  if (!d.classList.contains('dd--combo')) {
+    d.querySelectorAll('.dd__opt').forEach(o => o.setAttribute('aria-selected', String(o === opt)));
+    d.querySelector('.dd__val').innerHTML = opt.querySelector('.dd__ico')?.outerHTML + `<span>${opt.querySelector('span:not(.dd__ico)').innerHTML}</span>`;
+  }
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+  closeDd(d);
+  if (!d.classList.contains('dd--combo')) d.querySelector('.dd__btn').focus();
+}
+
+document.addEventListener('click', e => {
+  const d = e.target.closest('[data-dd]');
+  if (!d) return closeAllDd();
+  const opt = e.target.closest('.dd__opt');
+  if (opt) return chooseDd(d, opt);
+  if (e.target.closest('.dd__btn, .dd__toggle')) {
+    if (d.classList.contains('is-open')) closeDd(d); else openDd(d);
+  }
+});
+document.addEventListener('input', e => {
+  if (!e.isTrusted) return;
+  const d = e.target.closest?.('.dd--combo');
+  if (!d || !e.target.matches('input')) return;
+  if (d.classList.contains('is-open')) filterDd(d, e.target.value); else openDd(d, e.target.value);
+});
+document.addEventListener('focusin', e => {
+  const d = e.target.closest?.('.dd--combo');
+  if (d && e.target.matches('input') && !d.classList.contains('is-open')) openDd(d);
+});
+document.addEventListener('focusout', e => {
+  const d = e.target.closest?.('[data-dd]');
+  if (d && !d.contains(e.relatedTarget)) closeDd(d);
+});
+document.addEventListener('keydown', e => {
+  const d = e.target.closest?.('[data-dd]');
+  if (!d) return;
+  const isOpen = d.classList.contains('is-open');
+  if (e.key === 'Escape' && isOpen) {
+    e.stopPropagation();
+    closeDd(d);
+    (d.querySelector('.dd__btn') || d.querySelector('input')).focus();
+  } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    if (!isOpen) openDd(d, d.classList.contains('dd--combo') ? d.querySelector('input').value : '');
+    const list = [...d.querySelectorAll('.dd__opt:not([hidden])')];
+    if (!list.length) return;
+    const down = e.key === 'ArrowDown';
+    const i = list.indexOf(document.activeElement);
+    list[i < 0 ? (down ? 0 : list.length - 1) : (i + (down ? 1 : -1) + list.length) % list.length].focus();
+  }
+});
+
+/* ---------- text areas grow with their text, so they never show a scrollbar ---------- */
+const fit = t => { t.style.height = 'auto'; t.style.height = t.scrollHeight + 2 + 'px'; };
+const fitAll = () => document.querySelectorAll('textarea').forEach(fit);
+let fitQueued = false;
+const queueFit = () => { if (fitQueued) return; fitQueued = true; requestAnimationFrame(() => { fitQueued = false; fitAll(); }); };
+document.addEventListener('input', e => { if (e.target.matches?.('textarea')) fit(e.target); });
+document.addEventListener('toggle', e => e.target.querySelectorAll?.('textarea').forEach(fit), true);
+addEventListener('resize', queueFit);
+new MutationObserver(queueFit).observe(document.getElementById('app'), { childList: true, subtree: true });

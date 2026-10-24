@@ -1,7 +1,9 @@
 // SERVICES: each service, and the work samples shown inside it on the "View all my services" dashboard.
-import { esc, text, area, pick, file, preview, tools, addBtn, bindForm } from '../ui.js';
+import { esc, text, area, pick, file, preview, tools, addBtn, bindForm, icon, svcIcon } from '../ui.js';
 
-const ICON_OPTIONS = [['web', 'Website'], ['ai', 'AI'], ['mobile', 'Mobile app'], ['uiux', 'UI / UX'], ['video', 'Video'], ['automation', 'Automation']];
+const ICON_OPTIONS = [['web', 'Website', 'web'], ['ai', 'AI', 'ai'], ['mobile', 'Mobile app', 'mobile'], ['uiux', 'UI / UX', 'uiux'], ['video', 'Video', 'video'], ['automation', 'Automation', 'automation']];
+
+let collapsed = false;   // the side panel stays collapsed or open while you move between pages
 
 const blankService = () => ({ id: '', title: 'New service', icon: 'web', blurb: '', samples: [] });
 const blankSample = () => ({ title: '', category: '', desc: '', link: '', file: '', poster: '', files: [] });
@@ -12,6 +14,8 @@ const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g
 export function mount(box, shell) {
   const model = { list: structuredClone(shell.content.services || []) };
   let sel = 0;
+  let drawer = false;    // phones and tablets: is the side panel slid open?
+  let fresh = false;     // a service was just added
   const open = new Set();
 
   const categories = () => [...new Set(model.list.flatMap(s => s.samples.map(x => x.category)).filter(Boolean))];
@@ -37,7 +41,7 @@ export function mount(box, shell) {
       <div class="card__body">
         <div class="grid-2">
           ${text({ label: 'Title', path: `${p}.title`, v: x.title })}
-          ${text({ label: 'Category', path: `${p}.category`, v: x.category, list: 'cats', ph: 'e.g. E-commerce', hint: 'Visitors filter by this. Pick an existing one to keep it consistent.' })}
+          ${text({ label: 'Category', path: `${p}.category`, v: x.category, options: categories(), ph: 'e.g. E-commerce', hint: 'Visitors filter by this. Pick an existing one to keep it consistent.' })}
         </div>
         ${area({ label: 'Description', path: `${p}.desc`, v: x.desc, rows: 3 })}
         ${file({ label: 'Main image, video or file', path: `${p}.file`, v: x.file, hint: 'A screenshot, video or PDF. A YouTube or Vimeo link also works.' })}
@@ -78,15 +82,28 @@ export function mount(box, shell) {
   const draw = () => {
     if (sel > model.list.length - 1) sel = Math.max(0, model.list.length - 1);
     const s = model.list[sel];
+    const name = x => x.title || 'Untitled';
     box.innerHTML = `
-      <datalist id="cats">${categories().map(c => `<option value="${esc(c)}"></option>`).join('')}</datalist>
-      <div class="split">
-        <nav class="split__rail" aria-label="Services">
-          ${model.list.map((x, i) => `<button type="button" class="rail__btn" data-sel="${i}"${i === sel ? ' aria-current="true"' : ''}><span>${esc(x.title || 'Untitled')}</span><em>${x.samples.length}</em></button>`).join('')}
-          ${addBtn('list', 'service', 'Add service')}
-        </nav>
+      <div class="svx${collapsed ? ' is-collapsed' : ''}${drawer ? ' is-open' : ''}">
+        <button type="button" class="panel-open" data-panel="open" aria-label="Open services list">
+          ${icon('panel')}<span>Services</span>
+        </button>
+        <div class="panel-scrim" data-panel="close"></div>
+        <aside class="panel" aria-label="Services">
+          <div class="panel__head">
+            <p class="panel__eyebrow">Services</p>
+            <button type="button" class="ib panel__collapse" data-panel="collapse" aria-expanded="${!collapsed}" aria-label="${collapsed ? 'Expand' : 'Collapse'} side panel">${icon('chevronL')}</button>
+            <button type="button" class="ib panel__x" data-panel="close" aria-label="Close side panel">${icon('x')}</button>
+          </div>
+          <button type="button" class="ptab ptab--add" data-act="add" data-path="list" data-tpl="service" title="Add service" aria-label="Add service">
+            <span class="ptab__ico">${icon('plus')}</span><span class="ptab__label">Add service</span>
+          </button>
+          <ul class="panel__nav">
+            ${model.list.map((x, i) => `<li><button type="button" class="ptab" data-sel="${i}" title="${esc(name(x))}"${i === sel ? ' aria-current="true"' : ''}><span class="ptab__ico">${svcIcon(x.icon)}</span><span class="ptab__label">${esc(name(x))}</span><span class="ptab__count">${x.samples.length}</span></button></li>`).join('')}
+          </ul>
+        </aside>
         <section class="split__body">
-          ${s ? editor(s, sel) : '<div class="empty"><h3>No services yet</h3><p>Add your first service on the left.</p></div>'}
+          ${s ? editor(s, sel) : '<div class="empty"><h3>No services yet</h3><p>Press “Add service” in the side panel to add your first one.</p></div>'}
         </section>
       </div>`;
   };
@@ -94,23 +111,49 @@ export function mount(box, shell) {
   bindForm(box, {
     draft: () => model,
     changed: () => shell.setDirty(true),
-    redraw: () => { const y = scrollY; draw(); scrollTo(0, y); },
+    redraw: () => {
+      const y = scrollY;
+      draw();
+      if (fresh) {                                    // new service: jump to its form and select the name
+        fresh = false;
+        scrollTo(0, 0);
+        box.querySelector('.split__body input')?.select();
+      } else scrollTo(0, y);
+    },
     templates: { service: blankService, sample: blankSample, attach: blankAttach },
     open,
     after: (act, d) => {
       if (d.path !== 'list') return;
-      if (act === 'add') sel = model.list.length - 1;
+      if (act === 'add') { sel = model.list.length - 1; drawer = false; fresh = true; }
       else if (act === 'remove') sel = Math.min(sel, model.list.length - 1);
       else if (act === 'up' || act === 'down') sel = Number(d.i) + (act === 'up' ? -1 : 1);
     }
   });
 
   box.addEventListener('click', e => {
+    const p = e.target.closest('[data-panel]');
+    if (p) {                                          // open / close the side panel (no redraw, so it can slide)
+      const wrap = box.querySelector('.svx');
+      if (p.dataset.panel === 'collapse') {
+        collapsed = !collapsed;
+        wrap.classList.toggle('is-collapsed', collapsed);
+        p.setAttribute('aria-expanded', String(!collapsed));
+        p.setAttribute('aria-label', (collapsed ? 'Expand' : 'Collapse') + ' side panel');
+      } else {
+        drawer = p.dataset.panel === 'open';
+        wrap.classList.toggle('is-open', drawer);
+      }
+      return;
+    }
     const b = e.target.closest('[data-sel]');
     if (!b) return;
     sel = Number(b.dataset.sel);
+    drawer = false;
     draw();
     scrollTo(0, 0);
+  });
+  box.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && drawer) { drawer = false; box.querySelector('.svx')?.classList.remove('is-open'); }
   });
 
   shell.onSave(async () => {

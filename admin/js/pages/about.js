@@ -43,8 +43,10 @@ export function mount(box, shell) {
       <div class="card">
         <div class="card__head"><strong class="card__title">Profile</strong></div>
         <div class="card__body">
-          ${file({ label: 'Your photo', path: 'photo', v: model.photo, accept: 'image/*' })}
-          ${file({ label: 'Resume (PDF)', path: 'resume', v: model.resume, accept: '.pdf,application/pdf' })}
+          <div class="pair">
+            ${file({ label: 'Your photo', path: 'photo', v: model.photo, accept: 'image/*' })}
+            ${file({ label: 'Resume (PDF)', path: 'resume', v: model.resume, accept: '.pdf,application/pdf' })}
+          </div>
           <div class="grid-2">
             ${text({ label: 'Name', path: 'name', v: model.name })}
             ${text({ label: 'Role', path: 'role', v: model.role })}
