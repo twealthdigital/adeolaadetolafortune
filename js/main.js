@@ -5,7 +5,8 @@ import { initServicesCarousel } from './services.js';
 import { initExperience } from './experience.js';
 import { initContact } from './contact.js';
 import { initServicesDashboard } from './services-dashboard.js';
-import { getContent, renderExperience } from './content.js';
+import { getContent, renderExperience, renderServices } from './content.js';
+import { applySite } from './site.js';
 import { initAboutDashboard } from './about-dashboard.js';
 
 mountHeader('#site-header');
@@ -27,8 +28,13 @@ mountHeader('#site-header');
   });
 })();
 initNav();
-initServicesCarousel();
-getContent().then(c => { renderExperience(c && c.experience); initExperience(); });
+getContent().then(c => {
+  applySite(c);
+  renderServices(c && c.services);
+  initServicesCarousel();
+  renderExperience(c && c.experience);
+  initExperience();
+});
 initContact();
 initServicesDashboard();
 initAboutDashboard();

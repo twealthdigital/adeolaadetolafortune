@@ -5,7 +5,7 @@ const ICON_OPTIONS = [['web', 'Website', 'web'], ['ai', 'AI', 'ai'], ['mobile', 
 
 let collapsed = false;   // the side panel stays collapsed or open while you move between pages
 
-const blankService = () => ({ id: '', title: 'New service', icon: 'web', blurb: '', samples: [] });
+const blankService = () => ({ id: '', title: 'New service', icon: 'web', cover: '', blurb: '', samples: [] });
 const blankSample = () => ({ title: '', category: '', desc: '', link: '', file: '', poster: '', files: [] });
 const blankAttach = () => ({ label: '', src: '' });
 
@@ -67,6 +67,7 @@ export function mount(box, shell) {
           ${text({ label: 'Service name', path: `list.${i}.title`, v: s.title })}
           ${pick({ label: 'Icon', path: `list.${i}.icon`, v: s.icon, options: ICON_OPTIONS })}
         </div>
+        ${file({ label: 'Homepage card image', path: `list.${i}.cover`, v: s.cover, accept: 'image/*', hint: 'The picture on this service card in the homepage carousel.' })}
         ${area({ label: 'Short description', path: `list.${i}.blurb`, v: s.blurb, rows: 2, hint: 'Shown at the top of this service for visitors.' })}
       </div>
     </div>
@@ -177,7 +178,7 @@ export function mount(box, shell) {
           files: (x.files || []).filter(a => a.src.trim()).map(a => ({ label: a.label.trim() || 'File', src: a.src.trim() }))
         };
       });
-      return { id, title, icon: s.icon, blurb: s.blurb.trim(), samples };
+      return { id, title, icon: s.icon, cover: (s.cover || '').trim(), blurb: s.blurb.trim(), samples };
     });
 
     await shell.api.saveSection('services', clean);

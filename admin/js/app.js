@@ -7,6 +7,7 @@ const PAGES = [
   { id: 'experience', label: 'Experience', hint: 'The timeline on your homepage.', icon: 'briefcase', load: () => import('./pages/experience.js') },
   { id: 'services', label: 'Services', hint: 'Your services and the work samples inside each one.', icon: 'grid', load: () => import('./pages/services.js') },
   { id: 'about', label: 'About', hint: 'Your profile, certificates, skills and FAQ.', icon: 'user', load: () => import('./pages/about.js') },
+  { id: 'site', label: 'Site settings', hint: 'Logo, favicon, hero text, contact details and social links. Changes apply everywhere on the website.', icon: 'settings', load: () => import('./pages/site.js') },
   { id: 'contact', label: 'Contact form', hint: 'Connect the form so messages reach your inbox.', icon: 'mail', load: () => import('./pages/settings.js') }
 ];
 

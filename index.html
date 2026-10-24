@@ -55,7 +55,7 @@
           <svg class="avatar__ring" viewBox="0 0 100 100" aria-hidden="true">
             <circle cx="50" cy="50" r="48.5" pathLength="96"/>
           </svg>
-          <img class="avatar__img" src="/assets/images/fortune-portrait.webp"
+          <img class="avatar__img" data-bind-src="hero.photo" src="/assets/images/fortune-portrait.webp"
                alt="Fortune, black and white portrait on a yellow background"
                width="400" height="400" fetchpriority="high">
         </div>
@@ -63,19 +63,19 @@
         <div class="hero__info">
 
           <h1 class="hero__name" id="hero-name">
-            I am Fortune
+            <span data-bind="hero.name">I am Fortune</span>
             <svg class="hero__moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 14.5A9 9 0 1 1 9.5 3a7 7 0 0 0 11.5 11.5z"/></svg>
           </h1>
 
-          <p class="hero__headline">I build intelligent digital solutions.</p>
-          <p class="hero__bio">AI-powered websites, mobile applications, and automations that help businesses solve problems, operate smarter, and grow faster.</p>
+          <p class="hero__headline" data-bind="hero.headline">I build intelligent digital solutions.</p>
+          <p class="hero__bio" data-bind="hero.bio">AI-powered websites, mobile applications, and automations that help businesses solve problems, operate smarter, and grow faster.</p>
 
           <div class="hero__actions">
-            <a class="btn btn--primary" href="#services" data-open-services aria-haspopup="dialog" aria-controls="services-dashboard">Explore my work</a>
+            <a class="btn btn--primary" href="#services" data-open-services aria-haspopup="dialog" aria-controls="services-dashboard"><span data-bind="hero.primary">Explore my work</span></a>
 
             <div class="btn-group">
               <a class="btn btn--dark" href="#contact">
-                Let's work together
+                <span data-bind="hero.secondary">Let's work together</span>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
               </a>
 
@@ -91,7 +91,7 @@
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13"/></svg>
                     <span>Share portfolio</span>
                   </button>
-                  <a class="dropdown__item" role="menuitem" href="/assets/resume/myresume.pdf" download="Adetola-Fortune-Resume.pdf">
+                  <a class="dropdown__item" role="menuitem" data-resume href="/assets/resume/myresume.pdf" download="Adetola-Fortune-Resume.pdf">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
                     <span>Download resume</span>
                   </a>
@@ -99,15 +99,15 @@
                   <div class="dropdown__sep" role="separator"></div>
 
                   <div class="dropdown__label" role="presentation">Get in touch</div>
-                  <a class="dropdown__item" role="menuitem" href="https://github.com/twealthdigital" target="_blank" rel="noopener">
+                  <a class="dropdown__item" role="menuitem" data-link="github" href="https://github.com/twealthdigital" target="_blank" rel="noopener">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
                     <span>GitHub</span>
                   </a>
-                  <a class="dropdown__item" role="menuitem" href="mailto:adeolaadetolafortune@gmail.com">
+                  <a class="dropdown__item" role="menuitem" data-link="email" href="mailto:adeolaadetolafortune@gmail.com">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
                     <span>Send an email</span>
                   </a>
-                  <a class="dropdown__item" role="menuitem" href="https://wa.me/2347025723662" target="_blank" rel="noopener">
+                  <a class="dropdown__item" role="menuitem" data-link="whatsapp" href="https://wa.me/2347025723662" target="_blank" rel="noopener">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l1.65-4.9A8.5 8.5 0 1 1 8 19.4z"/></svg>
                     <span>WhatsApp</span>
                   </a>
@@ -236,8 +236,8 @@
           </div>
 
           <div class="about__body">
-            <p class="about__headline">Turning ideas into <span>Problem solving </span>opportunities.</p>
-            <p class="about__text">My name is Fortune, am a CERTIFIED Software engineer passionate about building websites, mobile applications, and AI-driven solutions that solve real world modern day problems. I combine creativity, software development, and artificial intelligence to turn ideas into positive opportunities.</p>
+            <p class="about__headline" data-about-headline>Turning ideas into <span>Problem solving </span>opportunities.</p>
+            <p class="about__text" data-about-text>My name is Fortune, am a CERTIFIED Software engineer passionate about building websites, mobile applications, and AI-driven solutions that solve real world modern day problems. I combine creativity, software development, and artificial intelligence to turn ideas into positive opportunities.</p>
 
             <a class="btn btn--primary btn--lg" href="#about" data-open-about aria-haspopup="dialog" aria-controls="about-dashboard">
               Read More About Me
@@ -261,8 +261,8 @@
           <aside class="xp__side">
             <div class="xp__intro">
               <p class="xp__headline">Experience that <span>speaks</span> through the work.</p>
-              <p class="xp__years"><strong>4</strong> Years of Experience</p>
-              <p class="xp__lead">A timeline of the projects, skills, and practical experience shaping my journey as a Profound Software Engineer, with 4 years of hands-on experience.</p>
+              <p class="xp__years"><strong data-years>4</strong> Years of Experience</p>
+              <p class="xp__lead">A timeline of the projects, skills, and practical experience shaping my journey as a Profound Software Engineer, with <span data-years>4</span> years of hands-on experience.</p>
             </div>
             <div class="xp__stat" data-xp-years data-since="2022-01-01" role="img" aria-label="4 years of experience">
               <div class="xp__gauge">
@@ -417,27 +417,27 @@
 
             <ul class="contact__list">
               <li>
-                <a class="contact__item" href="tel:+2347025723662">
+                <a class="contact__item" data-bind-href="contact.phone" data-prefix="tel:" href="tel:+2347025723662">
                   <span class="contact__icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg></span>
-                  <span class="contact__item-text"><small>Phone Number</small><b>+234 702 572 3662</b></span>
+                  <span class="contact__item-text"><small>Phone Number</small><b data-bind="contact.phoneLabel">+234 702 572 3662</b></span>
                 </a>
               </li>
               <li>
-                <a class="contact__item"  href="mailto:adeolaadetolafortune@gmail.com">
+                <a class="contact__item" data-bind-href="contact.email" data-prefix="mailto:" href="mailto:adeolaadetolafortune@gmail.com">
                   <span class="contact__icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5h18a1 1 0 0 1 1 1v.5l-10 6.5L2 6.5V6a1 1 0 0 1 1-1z"/><path d="M2 9l10 6.5L22 9v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1z"/></svg></span>
-                  <span class="contact__item-text"><small>Email Address</small><b class="contact__email">adeolaadetolafortune@gmail.com</b></span>
+                  <span class="contact__item-text"><small>Email Address</small><b class="contact__email" data-bind="contact.email">adeolaadetolafortune@gmail.com</b></span>
                 </a>
               </li>
               <li>
                 <div class="contact__item">
                   <span class="contact__icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5h2v4.6l3.2 1.9-1 1.7L11 12.6V7z"/></svg></span>
-                  <span class="contact__item-text"><small>Active Hours</small><b><span class="contact__gold">24 hours</span> Always Active</b></span>
+                  <span class="contact__item-text"><small>Active Hours</small><b><span class="contact__gold" data-bind="contact.hoursHighlight">24 hours</span> <span data-bind="contact.hours">Always Active</span></b></span>
                 </div>
               </li>
               <li>
                 <div class="contact__item">
                   <span class="contact__icon"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M12 22s7-6.2 7-12.5a7 7 0 0 0-14 0C5 15.8 12 22 12 22zm0-9.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg></span>
-                  <span class="contact__item-text"><small>Location</small><b>Nigeria</b></span>
+                  <span class="contact__item-text"><small>Location</small><b data-bind="contact.location">Nigeria</b></span>
                 </div>
               </li>
             </ul>
@@ -516,7 +516,7 @@
 
   <footer class="footer">
     <div class="container">
-      <p>&copy; <span data-year>2026</span> Adeola Fortune Adetola. All rights reserved.</p>
+      <p>&copy; <span data-year>2026</span> <span data-bind="brand.footer">Adeola Fortune Adetola</span>. All rights reserved.</p>
     </div>
   </footer>
 

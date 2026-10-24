@@ -36,3 +36,24 @@ export function renderExperience(items) {
       </article>
     </li>`).join('');
 }
+
+
+// Builds the homepage services carousel from the services in the content.
+// If there are no services (or no server), the cards already in index.html stay untouched.
+export function renderServices(items) {
+  const track = document.querySelector('[data-carousel] .carousel__track');
+  if (!track || !Array.isArray(items) || !items.length) return;
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const fallback = { web: 'web.png', ai: 'ai.png', mobile: 'mobile.png', uiux: 'mobile.png' };
+  const cover = s => s.cover || (fallback[s.id] ? `/assets/images/services.images/${fallback[s.id]}` : '/assets/images/fortune-portrait.webp');
+  track.innerHTML = items.map(s => `
+    <li class="svc">
+      <h3 class="svc__label">${esc(s.title)}</h3>
+      <div class="svc__stage">
+        <img class="svc__img" src="${esc(cover(s))}" alt="Preview of ${esc(s.title)}" width="480" height="300" loading="lazy" draggable="false">
+        <button class="svc__go" type="button" aria-label="Explore ${esc(s.title)}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+        </button>
+      </div>
+    </li>`).join('');
+}
