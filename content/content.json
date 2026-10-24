@@ -1,0 +1,67 @@
+{
+  "experience": [
+    { "name": "ACCOOM", "desc": "Developing a student-focused accommodation platform designed to connect property seekers with agents through property listings, property details, saved listings, and communication features.", "skills": [] },
+    { "name": "YTReak Global Technology", "desc": "I developed a Technology Agency digital presence i once partnered with, showcasing their services in website development, AI integration, and mobile app development to improve business products and service visibility and attract potential clients.", "skills": [] },
+    { "name": "MM Beauty & Care", "desc": "Working on an online beauty and personal-care shopping experience featuring product categories, product discovery, brand storytelling, and shopping-focused pages.", "skills": [] },
+    { "name": "NullCipher Security", "desc": "Building a professional online presence for a cybersecurity brand, presenting its security services, technical expertise, and engagement pathways.", "skills": [] },
+    { "name": "Nexa Infra", "desc": "Developing a digital presence for an infrastructure-focused business, organizing its brand presentation and services into a clear website experience.", "skills": [] },
+    { "name": "JAAM Power Washing", "desc": "Creating a web presence for an exterior-cleaning business, presenting its services and helping potential customers understand how to get in touch.", "skills": [] },
+    { "name": "Business Solutions Academy", "desc": "Building a digital experience for a coaching business, presenting educational programs, course offerings, and clear pathways for prospective clients.", "skills": [] },
+    { "name": "Blegab", "desc": "Working on an online shopping experience focused on presenting products clearly and creating a straightforward path from browsing to purchase.", "skills": [] }
+  ],
+  "services": [
+    {
+      "id": "web", "title": "Web Development", "icon": "web",
+      "blurb": "Fast, responsive websites and web platforms that present a business clearly and bring in customers.",
+      "samples": [
+        { "title": "ACCOOM", "category": "Platform", "desc": "A student-focused accommodation platform connecting property seekers with agents through listings, property details, saved listings and messaging.", "link": "", "file": "", "poster": "", "files": [] },
+        { "title": "YTReak Global Technology", "category": "Business Website", "desc": "The digital presence of a technology agency, showcasing its website development, AI integration and mobile app services.", "link": "", "file": "", "poster": "", "files": [] },
+        { "title": "MM Beauty & Care", "category": "E-commerce", "desc": "An online beauty and personal-care shop with product categories, product discovery and brand storytelling.", "link": "", "file": "", "poster": "", "files": [] },
+        { "title": "NullCipher Security", "category": "Business Website", "desc": "A professional online presence for a cybersecurity brand, presenting its security services, technical expertise and ways to engage.", "link": "", "file": "", "poster": "", "files": [] },
+        { "title": "Nexa Infra", "category": "Business Website", "desc": "A digital presence for an infrastructure-focused business, organizing its brand and services into a clear website experience.", "link": "", "file": "", "poster": "", "files": [] },
+        { "title": "JAAM Power Washing", "category": "Business Website", "desc": "A web presence for an exterior-cleaning business, presenting its services and making it easy for customers to get in touch.", "link": "", "file": "", "poster": "", "files": [] },
+        { "title": "Business Solutions Academy", "category": "Education", "desc": "A digital experience for a coaching business, presenting its educational programs, course offerings and clear paths for prospective clients.", "link": "", "file": "", "poster": "", "files": [] },
+        { "title": "Blegab", "category": "E-commerce", "desc": "An online shopping experience that presents products clearly and gives customers a straightforward path from browsing to purchase.", "link": "", "file": "", "poster": "", "files": [] }
+      ]
+    },
+    { "id": "ai", "title": "AI / Software Engineering", "icon": "ai", "blurb": "AI features and software engineering that make products smarter and workflows faster.", "samples": [] },
+    { "id": "mobile", "title": "Mobile App Development", "icon": "mobile", "blurb": "Mobile apps that give customers a smooth experience right on their phones.", "samples": [] },
+    { "id": "uiux", "title": "UI/UX", "icon": "uiux", "blurb": "Clean, easy-to-use interface designs and prototypes, planned before a single line of code is written.", "samples": [] },
+    { "id": "video", "title": "Video Editing", "icon": "video", "blurb": "Edited videos that tell your story and keep people watching.", "samples": [] },
+    { "id": "automation", "title": "Automation", "icon": "automation", "blurb": "Automated workflows that remove repetitive tasks so your team can focus on growth.", "samples": [] }
+  ],
+  "about": {
+    "projects": 8,
+    "bio": [
+      "I'm a certified software engineer who builds websites, mobile apps and AI-driven solutions that solve real-world problems. I mix creativity, software development and artificial intelligence to turn ideas into real opportunities.",
+      "I care about work that holds up in the real world: fast, clear to use, and built to help a business bring in customers."
+    ],
+    "experience": [
+      { "when": "2022", "title": "Getting started", "text": "Started with HTML, CSS and JavaScript, building small websites and learning how real businesses use the web." },
+      { "when": "2023", "title": "Going full stack", "text": "Added React and backend work, moving from static pages to platforms with listings, accounts and messaging." },
+      { "when": "2024", "title": "Adding AI", "text": "Began bringing AI features and automations into the products I build." },
+      { "when": "Now", "title": "Shipping for clients", "text": "Delivering websites, e-commerce stores and platforms for businesses." }
+    ],
+    "certificates": [],
+    "documents": [ { "title": "Resume", "file": "/assets/resume/myresume.pdf" } ],
+    "skills": [
+      { "group": "Frontend", "items": ["HTML5", "CSS3", "JavaScript (ES6+)", "React.js", "Redux Toolkit", "Responsive Design", "CSS Animations", "Progressive Web Apps", "Figma to Code"] },
+      { "group": "Backend & Mobile", "items": ["Node.js", "React Native", "REST APIs"] },
+      { "group": "AI & Automation", "items": ["AI Prompt Engineering", "LLM Integrations", "Workflow Automation"] },
+      { "group": "Design & Tools", "items": ["Figma", "Git & GitHub", "VS Code"] }
+    ],
+    "process": [
+      { "title": "Discover", "text": "You tell me what you need and who it's for." },
+      { "title": "Plan", "text": "I map out pages, features and a clear timeline." },
+      { "title": "Build", "text": "I design and code it, sharing progress as I go." },
+      { "title": "Launch", "text": "We go live, and I stay around for fixes and updates." }
+    ],
+    "faq": [
+      { "q": "What can you build for me?", "a": "Business websites, e-commerce stores, platforms, mobile apps, AI features and automations." },
+      { "q": "How long does a project take?", "a": "It depends on the size. I'll give you a clear timeline once I know the scope." },
+      { "q": "Can you add AI to my existing website?", "a": "Yes. I can add AI chat, smart search or automated workflows to a site you already have." },
+      { "q": "Do you work with clients outside Nigeria?", "a": "Yes. I work with clients anywhere, fully remote." },
+      { "q": "How do we get started?", "a": "Tap \"Start a project\" or send me a message and I'll get back to you." }
+    ]
+  }
+}

@@ -5,6 +5,8 @@ import { initServicesCarousel } from './services.js';
 import { initExperience } from './experience.js';
 import { initContact } from './contact.js';
 import { initServicesDashboard } from './services-dashboard.js';
+import { getContent, renderExperience } from './content.js';
+import { initAboutDashboard } from './about-dashboard.js';
 
 mountHeader('#site-header');
 
@@ -26,9 +28,10 @@ mountHeader('#site-header');
 })();
 initNav();
 initServicesCarousel();
-initExperience();
+getContent().then(c => { renderExperience(c && c.experience); initExperience(); });
 initContact();
 initServicesDashboard();
+initAboutDashboard();
 initDropdowns();
 
 // Footer year: updates itself every January

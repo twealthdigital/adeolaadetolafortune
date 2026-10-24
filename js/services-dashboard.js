@@ -1,6 +1,7 @@
 // "View all my services" dashboard: a panel that sits under the header and covers the page.
 // Left: the services. Right: samples as boxes, with category filters. Content comes from data/services.js.
-import { SERVICES } from './data/services.js';
+import { getContent } from './content.js';
+import { mediaInner, attachmentsHTML } from './components/media.js';
 
 const ICONS = {
   all: '<rect x="3" y="3" width="8" height="10" rx="2"/><rect x="13" y="3" width="8" height="6" rx="2"/><rect x="3" y="15" width="8" height="6" rx="2"/><rect x="13" y="11" width="8" height="10" rx="2"/>',
@@ -10,7 +11,8 @@ const ICONS = {
   uiux: '<path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>',
   video: '<path fill-rule="evenodd" d="M5 4h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3zm5 4.5v7l6-3.5-6-3.5z"/>',
   automation: '<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/>',
-  close: '<path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>'
+  close: '<path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>',
+  chevron: '<path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>'
 };
 const ARROW = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>';
 
@@ -27,7 +29,11 @@ export function initServicesDashboard() {
 
   const samplesOf = id => (id === 'all' ? SERVICES : SERVICES.filter(s => s.id === id))
     .flatMap(s => s.samples.map(x => ({ ...x, service: s })));
-  const total = SERVICES.reduce((n, s) => n + s.samples.length, 0);
+  let SERVICES = [], total = 0;
+  const ready = getContent().then(c => {
+    SERVICES = (c && c.services) || [];
+    total = SERVICES.reduce((n, s) => n + s.samples.length, 0);
+  });
 
   // The old mobile tab bar (fixed at the bottom) must stay visible, so the panel stops above it.
   const bottomOffset = () => {
@@ -43,7 +49,9 @@ export function initServicesDashboard() {
       <div class="sd__thumb">
         <span class="sd__thumb-ico">${svg(s.service.icon)}</span>
         <span class="sd__thumb-ini" aria-hidden="true">${esc(initials(s.title))}</span>
+        ${s.file ? mediaInner(s.file, s.title, s.poster) : ''}
         ${s.image ? `<img src="${esc(s.image)}" alt="Preview of ${esc(s.title)}" loading="lazy" draggable="false">` : ''}
+        ${s.link ? `<iframe class="sd__live" src="${esc(s.link)}" title="Live preview of ${esc(s.title)}" loading="lazy" tabindex="-1" scrolling="no" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>` : ''}
       </div>
       <div class="sd__info">
         <div class="sd__chips">
@@ -52,7 +60,8 @@ export function initServicesDashboard() {
         </div>
         <h4 class="sd__name">${esc(s.title)}</h4>
         <p class="sd__desc">${esc(s.desc)}</p>
-        ${s.link ? `<a class="sd__open" href="${esc(s.link)}" target="_blank" rel="noopener">View project ${ARROW}</a>` : ''}
+        ${attachmentsHTML(s.files)}
+        ${s.link ? `<a class="sd__open" href="${esc(s.link)}" target="_blank" rel="noopener">Live preview ${ARROW}</a>` : ''}
       </div>
     </li>`;
 
@@ -79,26 +88,14 @@ export function initServicesDashboard() {
     const svc = SERVICES.find(s => s.id === view);
     const all = samplesOf(view);
     const cats = [...new Set(all.map(s => s.category))];
-    const stats = view === 'all'
-      ? [[SERVICES.length, 'Services'], [all.length, 'Samples'], [cats.length, 'Categories']]
-      : [[all.length, 'Samples'], [cats.length, 'Categories']];
+ 
 
     tabs.forEach(t => {
       if (t.dataset.view === view) t.setAttribute('aria-current', 'true'); else t.removeAttribute('aria-current');
     });
 
     body.innerHTML = `
-      <div class="sd__view">
-        <span class="sd__view-icon">${svg(svc ? svc.icon : 'all')}</span>
-        <div>
-          <h3 class="sd__view-title">${svc ? esc(svc.title) : 'All services'}</h3>
-          <p class="sd__view-text">${svc ? esc(svc.blurb) : 'Everything I build, with samples of my work. Pick a service to focus on it.'}</p>
-        </div>
-      </div>
-
-      <div class="sd__stats">
-        ${stats.map(([n, l]) => `<div class="sd__stat"><b>${n}</b><span>${l}</span></div>`).join('')}
-      </div>
+ 
 
       <div class="sd__tools">
         ${cats.length > 1 ? `
@@ -136,7 +133,7 @@ export function initServicesDashboard() {
 
     const tab = (id, icon, title, n) => `
       <li>
-        <button class="sd__tab" type="button" data-view="${id}">
+        <button class="sd__tab" type="button" data-view="${id}" title="${esc(title)}" aria-label="${esc(title)}">
           <span class="sd__tab-icon">${svg(icon)}</span>
           <span class="sd__tab-label">${esc(title)}</span>
           <span class="sd__tab-count">${n}</span>
@@ -153,6 +150,7 @@ export function initServicesDashboard() {
       </div>
 
       <aside class="sd__side" aria-label="Services">
+        <button class="sd__collapse" type="button" data-sd-collapse aria-expanded="true" aria-label="Collapse side panel">${svg('chevron')}</button>
         <p class="sd__eyebrow">Browse</p>
         <ul class="sd__nav">
           ${tab('all', 'all', 'All services', total)}
@@ -173,6 +171,13 @@ export function initServicesDashboard() {
 
     root.addEventListener('click', e => {
       if (e.target.closest('[data-sd-close]')) return close();
+      const col = e.target.closest('[data-sd-collapse]');
+      if (col) {
+        const c = root.classList.toggle('is-collapsed');
+        col.setAttribute('aria-expanded', String(!c));
+        col.setAttribute('aria-label', c ? 'Expand side panel' : 'Collapse side panel');
+        return;
+      }
       const t = e.target.closest('.sd__tab');
       if (t) return select(t.dataset.view);
       const f = e.target.closest('.sd__filter');
@@ -185,7 +190,8 @@ export function initServicesDashboard() {
     });
   };
 
-  const open = (id = 'all', from = null) => {
+  const open = async (id = 'all', from = null) => {
+    await ready;
     if (!root) build();
     clearTimeout(hideTimer);
     if (opened) return select(id);
@@ -216,7 +222,7 @@ export function initServicesDashboard() {
   // Openers: the "View all my services" button, and each service card's arrow button
   document.addEventListener('click', e => {
     const all = e.target.closest('[data-open-services]');
-    if (all) return open('all', all);
+    if (all) { e.preventDefault(); return open('all', all); }
 
     const go = e.target.closest('.svc__go');
     if (go) {
