@@ -1,3 +1,5 @@
+import { localApi } from './local-api.js';
+
 // Talks to the backend. Every call returns the JSON answer, or throws an Error with a readable message.
 let onUnauthorized = () => {};
 export const setUnauthorizedHandler = fn => { onUnauthorized = fn; };
@@ -27,7 +29,7 @@ async function request(method, url, body) {
   return data;
 }
 
-export const api = {
+const remote = {
   me: () => request('GET', '/api/admin/me'),
   login: (email, password) => request('POST', '/api/admin/login', { email, password }),
   logout: () => request('POST', '/api/admin/logout', {}),
@@ -55,4 +57,21 @@ export const api = {
       xhr.send(form);
     });
   }
+};
+
+// Uses the real backend when it exists. If /api/admin/me is missing (404) or unreachable,
+// everything runs in local mode instead, saved in this browser.
+let local;
+async function detect() {
+  if (local !== undefined) return local;
+  try {
+    const res = await fetch('/api/admin/me', { headers: { Accept: 'application/json' } });
+    local = res.status === 404 || res.status === 405;
+  } catch { local = true; }
+  return local;
+}
+
+export const api = {
+  get mode() { return local ? 'local' : 'server'; },
+  ...Object.fromEntries(Object.keys(remote).map(k => [k, async (...a) => ((await detect()) ? localApi : remote)[k](...a)]))
 };
