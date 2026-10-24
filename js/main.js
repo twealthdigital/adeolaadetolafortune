@@ -4,6 +4,7 @@ import { initNav } from './navigation.js';
 import { initServicesCarousel } from './services.js';
 import { initExperience } from './experience.js';
 import { initContact } from './contact.js';
+import { initServicesDashboard } from './services-dashboard.js';
 
 mountHeader('#site-header');
 
@@ -27,6 +28,7 @@ initNav();
 initServicesCarousel();
 initExperience();
 initContact();
+initServicesDashboard();
 initDropdowns();
 
 // Footer year: updates itself every January

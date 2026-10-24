@@ -1,0 +1,27 @@
+/* CUSTOM SCROLLBAR: one file, used everywhere on the site (page, dashboard, any new scrolling box).
+   Change the look for the whole website by editing these 4 values. */
+:root {
+  --scroll-size: 12px;
+  --scroll-thumb: #3d3d3d;
+  --scroll-thumb-hover: #5c5c5c;
+  --scroll-track: transparent;
+}
+
+/* Chrome, Edge, Safari, Opera */
+::-webkit-scrollbar { width: var(--scroll-size); height: var(--scroll-size); }
+::-webkit-scrollbar-track { background: var(--scroll-track); }
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border: 3px solid transparent;      /* breathing space around the thumb */
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover,
+::-webkit-scrollbar-thumb:active { background: var(--scroll-thumb-hover); background-clip: padding-box; }
+::-webkit-scrollbar-button { display: none; }      /* removes the little arrows */
+::-webkit-scrollbar-corner { background: transparent; }
+
+/* Firefox (it ignores the rules above) */
+@supports not selector(::-webkit-scrollbar) {
+  * { scrollbar-width: thin; scrollbar-color: var(--scroll-thumb) var(--scroll-track); }
+}
