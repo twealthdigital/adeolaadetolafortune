@@ -2,7 +2,11 @@
 let cache;
 export function getContent() {
   cache ||= (async () => {
-    for (const url of ['/api/content', '/content/content.json']) {
+    for (const url of ['/api/content', 'local', '/content/content.json']) {
+      if (url === 'local') {
+        try { const l = JSON.parse(localStorage.getItem('portfolio.content')); if (l) return l; } catch { /* none */ }
+        continue;
+      }
       try {
         const r = await fetch(url, { headers: { Accept: 'application/json' } });
         if (r.ok) return await r.json();

@@ -1,6 +1,7 @@
 // Login screen.
 import { api } from '../api.js';
 import { esc } from '../ui.js';
+import { LOCAL_LOGIN } from '../local-api.js';
 
 export function renderLogin(app, { message = '', onSuccess }) {
   app.innerHTML = `
@@ -9,6 +10,7 @@ export function renderLogin(app, { message = '', onSuccess }) {
         <img class="login__logo" src="/assets/images/logo-if.webp" alt="" width="52" height="52">
         <h1>Admin login</h1>
         <p>Sign in to update your portfolio.</p>
+        ${api.mode === 'local' ? `<p class="login__msg">Local mode (saved in this browser). Email: <b>${LOCAL_LOGIN.email}</b> Password: <b>${LOCAL_LOGIN.password}</b></p>` : ''}
         ${message ? `<p class="login__msg">${esc(message)}</p>` : ''}
         <label class="f"><span class="f__label">Email</span>
           <input type="email" name="email" autocomplete="username" required></label>
