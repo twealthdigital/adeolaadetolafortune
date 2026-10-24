@@ -1,0 +1,43 @@
+/* LOGIN EXTRAS: the loading screen (same as the website) and the 6-digit code boxes. */
+
+/* ---------- loading screen ---------- */
+.loader {
+  position: fixed; inset: 0; z-index: 999;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px;
+  background: #000;
+  animation: loader-in .2s ease;
+  transition: opacity .4s ease, visibility .4s;
+}
+.loader.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader__mark {
+  font-family: var(--font); font-size: 56px; font-weight: 800; line-height: 1; letter-spacing: -.04em; color: #fff;
+  animation: loader-pulse 1.2s ease-in-out infinite;
+}
+.loader__mark span { color: var(--yellow); }
+.loader__bar { position: relative; width: 110px; height: 3px; overflow: hidden; border-radius: 3px; background: #242424; }
+.loader__bar::after {
+  content: ""; position: absolute; inset: 0; width: 40%; border-radius: 3px; background: var(--yellow);
+  animation: loader-slide 1s ease-in-out infinite;
+}
+@keyframes loader-in { from { opacity: 0; } }
+@keyframes loader-pulse { 50% { transform: scale(.92); opacity: .75; } }
+@keyframes loader-slide { from { transform: translateX(-100%); } to { transform: translateX(250%); } }
+
+/* ---------- 6-digit code boxes ---------- */
+.otp { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: clamp(6px, 2vw, 10px); }
+.otp .otp__d {
+  width: 100%; min-width: 0; min-height: 0; aspect-ratio: 1 / 1.15; padding: 0;
+  text-align: center; font-size: 1.5rem; font-weight: 800; line-height: 1;
+  background: var(--field); border: 1px solid var(--line); border-radius: 14px;
+  caret-color: var(--yellow);
+}
+.otp .otp__d:focus { border-color: var(--yellow); box-shadow: 0 0 0 3px rgb(255 210 10 / .15); }
+.otp.is-error .otp__d { border-color: var(--danger); animation: otp-shake .35s; }
+@keyframes otp-shake { 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+
+/* ---------- small link-style button under the login buttons ---------- */
+.login__alt {
+  align-self: center; padding: 6px 10px; background: none; border: 0;
+  color: var(--muted); font-size: .85rem; text-decoration: underline; text-underline-offset: 3px;
+}
+.login__alt:hover { color: var(--text); }

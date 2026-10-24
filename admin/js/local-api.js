@@ -1,14 +1,43 @@
-export const LOCAL_LOGIN = { email: 'admin@local.dev', password: 'admin123' };
-
-const K = { content: 'portfolio.content', settings: 'portfolio.settings', session: 'portfolio.session' };
+const K = { content: 'portfolio.content', settings: 'portfolio.settings', session: 'portfolio.session', auth: 'portfolio.auth' };
 const MAX_FILE_MB = 3;
+const MAX_MISSES = 5;   // wrong 6-digit codes in a row before the full login (email + password + code) is needed again
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const read = key => { try { return JSON.parse(localStorage.getItem(key)); } catch { return null; } };
 function write(key, value) {
   try { localStorage.setItem(key, JSON.stringify(value)); }
   catch { throw new Error('Browser storage is full. Remove some uploaded files, or wait for Cloudinary to be connected.'); }
 }
-const fail = (message, status) => Object.assign(new Error(message), { status });
+const fail = (message, status, extra) => Object.assign(new Error(message), { status }, extra);
+const norm = email => String(email || '').trim().toLowerCase();
+
+// ---------- passwords and codes are never saved as plain text ----------
+const enc = new TextEncoder();
+const toB64 = bytes => btoa(String.fromCharCode(...bytes));
+const fromB64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+
+// Plain http pages (for example testing on a phone over Wi-Fi) have no crypto.subtle, so this simpler salted hash is used there.
+function weakHash(secret, salt) {
+  const text = toB64(salt) + ':' + secret;
+  let out = '';
+  for (let lane = 0; lane < 4; lane++) {
+    let h = (2166136261 ^ (lane * 16777619)) >>> 0;
+    for (let round = 0; round < 3000; round++) for (let i = 0; i < text.length; i++) h = Math.imul(h ^ text.charCodeAt(i), 16777619) >>> 0;
+    out += h.toString(16).padStart(8, '0');
+  }
+  return out;
+}
+async function derive(secret, salt) {
+  if (!crypto.subtle) return weakHash(secret, salt);
+  const key = await crypto.subtle.importKey('raw', enc.encode(secret), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt, iterations: 100000, hash: 'SHA-256' }, key, 256);
+  return toB64(new Uint8Array(bits));
+}
+async function protect(secret) {
+  const salt = crypto.getRandomValues(new Uint8Array(16));
+  return { salt: toB64(salt), hash: await derive(secret, salt) };
+}
+const matches = async (secret, rec) => !!rec && (await derive(String(secret), fromB64(rec.salt))) === rec.hash;
 
 async function seed() {
   try {
@@ -31,19 +60,61 @@ async function shrink(file) {
 }
 
 export const localApi = {
+  // ---------- login ----------
   async me() {
     if (!localStorage.getItem(K.session)) throw fail('Not logged in.', 401);
-    return { email: LOCAL_LOGIN.email };
+    return { email: (read(K.auth) || {}).email || '' };
   },
-  async login(email, password) {
-    if (email !== LOCAL_LOGIN.email || password !== LOCAL_LOGIN.password) throw fail('Wrong email or password.', 401);
+  async authStatus() {
+    return { setup: !!read(K.auth) };
+  },
+  async signup(email, password, code) {
+    if (read(K.auth)) throw fail('An admin already exists. Log in instead.', 409);
+    email = norm(email);
+    if (!EMAIL.test(email)) throw fail('Enter a valid email address.', 400);
+    if (String(password).length < 8) throw fail('Use a password of at least 8 characters.', 400);
+    if (!/^\d{6}$/.test(code)) throw fail('Your code must be exactly 6 digits.', 400);
+    write(K.auth, { email, pass: await protect(password), code: await protect(code), misses: 0 });
     localStorage.setItem(K.session, '1');
     return { email };
+  },
+  async loginCode(email, code) {                     // quick login: email + 6-digit code
+    const a = read(K.auth);
+    if (!a) throw fail('No admin is set up yet.', 404);
+    if ((a.misses || 0) >= MAX_MISSES) throw fail('Too many wrong codes.', 423, { left: 0, locked: true });
+    if (norm(email) !== a.email) throw fail('Wrong email or code.', 401);
+    if (!(await matches(code, a.code))) {
+      a.misses = (a.misses || 0) + 1;
+      write(K.auth, a);
+      const left = MAX_MISSES - a.misses;
+      throw fail('Wrong code.', 401, { left, locked: left === 0 });
+    }
+    a.misses = 0;
+    write(K.auth, a);
+    localStorage.setItem(K.session, '1');
+    return { email: a.email };
+  },
+  async login(email, password, code) {               // full login: email + password + code (also unlocks quick login again)
+    const a = read(K.auth);
+    if (!a) throw fail('No admin is set up yet.', 404);
+    const ok = norm(email) === a.email && await matches(password, a.pass) && await matches(code, a.code);
+    if (!ok) throw fail('Wrong email, password or code.', 401);
+    a.misses = 0;
+    write(K.auth, a);
+    localStorage.setItem(K.session, '1');
+    return { email: a.email };
+  },
+  async resetLogin() {
+    localStorage.removeItem(K.auth);
+    localStorage.removeItem(K.session);
+    return {};
   },
   async logout() {
     localStorage.removeItem(K.session);
     return {};
   },
+
+  // ---------- content ----------
   async getContent() {
     return read(K.content) || await seed();
   },

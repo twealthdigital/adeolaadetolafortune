@@ -21,9 +21,11 @@ async function request(method, url, body) {
   try { data = await res.json(); } catch { /* empty answer */ }
 
   if (!res.ok) {
-    if (res.status === 401 && !url.endsWith('/login') && !url.endsWith('/me')) onUnauthorized();
+    if (res.status === 401 && !/\/api\/admin\/(login|login\/code|signup|status|me)$/.test(url)) onUnauthorized();
     const err = new Error((data && data.error) || `Something went wrong (${res.status}).`);
     err.status = res.status;
+    err.left = data && data.left;               // 6-digit code tries left (sent by the backend)
+    err.locked = !!(data && data.locked);       // true after 5 wrong codes
     throw err;
   }
   return data;
@@ -31,7 +33,11 @@ async function request(method, url, body) {
 
 const remote = {
   me: () => request('GET', '/api/admin/me'),
-  login: (email, password) => request('POST', '/api/admin/login', { email, password }),
+  authStatus: () => request('GET', '/api/admin/status'),
+  signup: (email, password, code) => request('POST', '/api/admin/signup', { email, password, code }),
+  loginCode: (email, code) => request('POST', '/api/admin/login/code', { email, code }),
+  login: (email, password, code) => request('POST', '/api/admin/login', { email, password, code }),
+  resetLogin: async () => { throw new Error('Reset is only for local mode.'); },
   logout: () => request('POST', '/api/admin/logout', {}),
   getContent: () => request('GET', '/api/admin/content'),
   saveSection: (name, data) => request('PUT', `/api/admin/content/${name}`, data),
