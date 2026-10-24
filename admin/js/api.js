@@ -60,6 +60,7 @@ const remote = {
 };
 
 
+
 let local;
 async function detect() {
   if (local !== undefined) return local;
