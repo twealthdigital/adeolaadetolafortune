@@ -1,6 +1,6 @@
 // CONTACT FORM: paste the Web3Forms access key here instead of editing code.
 // The key is kept on the server. It is never written into the website's HTML.
-import { esc, icon } from '../ui.js';
+import { esc, icon, confirmBox } from '../ui.js';
 
 export async function mount(box, shell) {
   box.innerHTML = '<p class="intro">Loading...</p>';
@@ -32,9 +32,10 @@ export async function mount(box, shell) {
 
           <label class="f"><span class="f__label">Web3Forms access key</span>
             <span class="pw">
-              <input type="password" id="key" placeholder="${s.hasKey ? 'Leave empty to keep the current key' : 'Paste your access key'}" autocomplete="off" spellcheck="false">
+              <input type="password" id="key" placeholder="${s.hasKey ? `•••••••••••••••• ${esc(s.keyEnd || '')}  (saved)` : 'Paste your access key'}" autocomplete="off" spellcheck="false">
               <button type="button" class="ib" id="peek" aria-label="Show or hide the key">${icon('eye')}</button>
             </span>
+            ${s.hasKey ? '<button type="button" class="btn btn--sm" id="drop-key" style="align-self:flex-start">' + icon('x') + ' Remove key</button>' : ''}
           </label>
 
           <label class="f"><span class="f__label">Email subject</span>
@@ -56,6 +57,15 @@ export async function mount(box, shell) {
     key.addEventListener('input', () => shell.setDirty(true));
     subject.addEventListener('input', () => shell.setDirty(true));
     box.querySelector('#peek').addEventListener('click', () => { key.type = key.type === 'password' ? 'text' : 'password'; });
+    box.querySelector('#drop-key')?.addEventListener('click', async () => {
+      const ok = await confirmBox('Remove the access key?', 'The contact form will stop sending messages until you add a key again.', 'Remove key');
+      if (!ok) return;
+      try {
+        s = await shell.api.saveSettings({ web3formsKey: '' });
+        draw();
+        shell.toast('Key removed. The contact form is switched off.');
+      } catch (err) { shell.toast(err.message, 'error'); }
+    });
     box.querySelector('#out').addEventListener('click', shell.logout);
   };
 

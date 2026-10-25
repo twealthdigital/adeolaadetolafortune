@@ -148,3 +148,38 @@ a.contact__item:hover b { color: var(--yellow); }
 .contact__soc:hover { background: var(--yellow-hover); transform: translateY(-3px); }
 .contact__soc:active { transform: scale(.94); }
 .contact__soc svg { width: 46%; height: 46%; }
+
+
+/* Service dropdown (the real <select> stays hidden underneath so the form still sends it) */
+.cdd { position: relative; min-width: 0; }
+.cdd [hidden] { display: none !important; }
+.cdd__btn {
+  display: flex; align-items: center; width: 100%; min-width: 0; padding: 14px 44px 14px 18px;
+  font: inherit; font-size: .92rem; color: #fff; text-align: left;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: 16px;
+  cursor: pointer; transition: border-color .15s;
+}
+.cdd__btn:focus-visible, .cdd.is-open .cdd__btn, .cdd.is-open .cdd__other { outline: none; border-color: var(--yellow); }
+.cdd__val { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cdd__val.is-placeholder { color: var(--muted); }
+.contact__form .cdd__other { padding-right: 44px; }
+.cdd__chev { position: absolute; top: 0; right: 0; bottom: 0; display: grid; place-items: center; width: 44px; padding: 0; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.cdd__chev svg { width: 18px; height: 18px; transition: transform .2s, color .2s; }
+.cdd.is-open .cdd__chev svg { transform: rotate(180deg); color: var(--yellow); }
+
+.cdd__menu {
+  position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 30;
+  max-height: 260px; margin: 0; padding: 6px; overflow-y: auto; overscroll-behavior: contain; list-style: none;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 18px 50px rgb(0 0 0 / .65);
+  visibility: hidden; opacity: 0; pointer-events: none; transform: translateY(-6px) scale(.98); transform-origin: top;
+  transition: opacity .15s, transform .15s, visibility 0s linear .15s;
+}
+.cdd.is-open .cdd__menu { visibility: visible; opacity: 1; pointer-events: auto; transform: none; transition: opacity .15s, transform .15s, visibility 0s; }
+.cdd.is-up .cdd__menu { top: auto; bottom: calc(100% + 8px); transform-origin: bottom; transform: translateY(6px) scale(.98); }
+.cdd.is-up.is-open .cdd__menu { transform: none; }
+.cdd__opt { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 12px; border-radius: 12px; font-size: .9rem; font-weight: 700; cursor: pointer; }
+.cdd__opt:hover, .cdd__opt:focus-visible { outline: 0; background: var(--surface-2); }
+.cdd__opt:focus-visible { box-shadow: inset 0 0 0 2px var(--yellow); }
+.cdd__opt svg { flex: none; width: 16px; height: 16px; color: var(--yellow); opacity: 0; }
+.cdd__opt[aria-selected="true"] { color: var(--yellow); }
+.cdd__opt[aria-selected="true"] svg { opacity: 1; }
