@@ -192,7 +192,7 @@ input::placeholder, textarea::placeholder { color: #6b6b6b; }
 .file { display: flex; align-items: center; gap: 18px; }
 .file__prev { display: grid; place-items: center; flex: none; width: 112px; height: 112px; overflow: hidden; background: var(--field); border: 1px solid var(--line); border-radius: 18px; }
 .file__main { display: flex; flex: 1; flex-direction: column; gap: 10px; min-width: 0; }
-.file__btns { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.file__btns { display: flex; flex-direction: column; align-items: stretch; gap: 8px; width: 100%; max-width: 160px; }
 .file__prog { color: var(--yellow); font-size: .8rem; font-weight: 700; }
 .prev { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center 20%; }
 .prev--empty { display: grid; place-items: center; color: #555; }
@@ -410,20 +410,56 @@ input::placeholder, textarea::placeholder { color: #6b6b6b; }
 }
 
 
-/* upload fields on phones: big preview across the full width, link box and buttons under it */
+/* upload fields on phones: preview at half the screen width (capped), buttons under it */
 @media (max-width: 599px) {
-  .file { flex-direction: column; align-items: stretch; gap: 12px; }
-  .file__prev { width: 100%; height: auto; border-radius: 20px; }
-  .file__prev .prev { height: auto; max-height: 420px; object-fit: contain; }
-  .file__prev .prev--empty, .file__prev .prev--tag { min-height: 160px; }
+  .file { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .file__prev { width: 50%; max-width: 180px; min-width: 96px; height: auto; aspect-ratio: 1 / 1; border-radius: 16px; }
+  .file__prev .prev { width: 100%; height: 100%; object-fit: contain; }
   .file__main { width: 100%; }
-  .file__btns { justify-content: center; }
-  .file__btns .btn { flex: 1; }
+}
+@media (max-width: 380px) {
+  .file__prev { width: 45%; min-width: 84px; }
 }
 
 
 /* photo and resume side by side on desktop */
-.pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+.pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 @media (min-width: 1100px) {
-  .pair { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+  .pair { gap: 24px; }
 }
+/* narrower screens: each field is a column, preview on top, Upload then Remove under it */
+@media (max-width: 699px) {
+  .pair .file { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .pair .file__prev { width: 100%; max-width: 180px; min-width: 0; height: auto; aspect-ratio: 1 / 1; border-radius: 16px; }
+  .pair .file__prev .prev { width: 100%; height: 100%; object-fit: contain; }
+  .pair .file__main { width: 100%; }
+  .pair .file__btns { max-width: none; }
+}
+
+/* three upload slots side by side */
+.trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.trio .file { flex-direction: column; align-items: flex-start; gap: 10px; }
+.trio .file__prev { width: 100%; max-width: 180px; min-width: 0; height: auto; aspect-ratio: 1 / 1; border-radius: 16px; }
+.trio .file__prev .prev { width: 100%; height: 100%; object-fit: cover; }
+.trio .file__main { width: 100%; }
+.trio .file__btns { max-width: none; }
+@media (max-width: 480px) {
+  .trio { gap: 8px; }
+  .trio .file__btns .btn { padding: 0 8px; gap: 4px; font-size: .74rem; }
+  .trio .file__btns .btn svg { width: 14px; height: 14px; }
+}
+
+.dd__add { margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--line); border-radius: 0 0 12px 12px; color: var(--yellow); }
+.dd__add svg { width: 16px; height: 16px; flex: none; }
+
+
+/* video link field */
+.vid { display: flex; align-items: center; gap: 14px; }
+.vid__prev { display: grid; place-items: center; flex: none; width: 96px; aspect-ratio: 16 / 10; overflow: hidden; background: var(--field); border: 1px solid var(--line); border-radius: 14px; }
+.vid__prev .prev { object-fit: cover; }
+.vid__main { display: flex; flex: 1; flex-direction: column; gap: 6px; min-width: 0; }
+.vid__state { min-height: 1.2em; color: var(--muted); font-size: .76rem; }
+.vid__state.is-bad { color: var(--danger); }
+.vid__load { width: 100%; height: 100%; background: linear-gradient(100deg, #151515 30%, #262626 50%, #151515 70%) 0 0 / 200% 100%; animation: vid-shine 1.1s linear infinite; }
+@keyframes vid-shine { to { background-position: -200% 0; } }
+@media (max-width: 599px) { .vid__prev { width: 76px; } }

@@ -3,7 +3,7 @@
 //
 // CERTIFICATES: put each image in /assets/certificates/ and add one { ... } line per certificate.
 
-import { mediaInner, attachmentsHTML } from './components/media.js';
+import { mediaInner, attachmentsHTML, kindOf } from './components/media.js';
 import { getContent } from './content.js';
 
 // Filled from content/content.json (edited in the admin). Only safe defaults live here.
@@ -86,7 +86,8 @@ const VIEWS = {
          <li class="sd__card">
            <div class="sd__thumb ab__cert">
              <span class="sd__thumb-ico">${svg('cert')}</span>
-             ${mediaInner(c.file || c.video || c.image, c.title, c.poster)}
+             ${mediaInner(c.file || c.video || c.image, c.title, c.poster, false)}
+             ${certImage(c) ? `<button class="ab__zoom" type="button" data-cert-view="${esc(certImage(c))}" data-cert-title="${esc(c.title)}" aria-label="View ${esc(c.title)} in full"></button>` : ''}
            </div>
            <div class="sd__info">
              <div class="sd__chips"><span class="sd__chip sd__chip--cat">${esc(c.year)}</span></div>
@@ -118,6 +119,101 @@ const VIEWS = {
       </div>
     </section>`
 };
+
+// ---- Certificate viewer: opens a certificate in a box, with a watermark burned into the picture ----
+const WATERMARK = 'Adeola Fortune Adetola  ·  For viewing only  ·  Not for reuse';
+
+// The picture to show for a certificate (an image, or the cover of a PDF). Videos are left alone.
+const certImage = c => {
+  const src = c.file || c.image || '';
+  const k = kindOf(src);
+  return k === 'image' ? src : (k === 'file' && c.poster ? c.poster : '');
+};
+
+function paintCertificate(img, canvas) {
+  const w = Math.min(img.naturalWidth, 1600);
+  const h = Math.round(img.naturalHeight * (w / img.naturalWidth));
+  const fs = Math.max(14, Math.round(w / 40));
+  const bar = Math.round(fs * 2.4);
+  canvas.width = w;
+  canvas.height = h + bar;
+  const g = canvas.getContext('2d');
+  g.drawImage(img, 0, 0, w, h);
+
+  // faint diagonal name across the whole certificate, so cropping the bottom label is not enough
+  g.save();
+  g.beginPath(); g.rect(0, 0, w, h); g.clip();
+  g.translate(w / 2, h / 2);
+  g.rotate(-Math.PI / 7);
+  g.font = `800 ${fs}px Sora, system-ui, sans-serif`;
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.lineWidth = Math.max(1, fs / 10);
+  g.strokeStyle = 'rgba(0,0,0,.22)';
+  g.fillStyle = 'rgba(255,255,255,.28)';
+  const span = Math.hypot(w, h), stepY = fs * 4.4, stepX = fs * 19;
+  let row = 0;
+  for (let y = -span; y < span; y += stepY, row++) {
+    for (let x = -span + (row % 2) * (stepX / 2); x < span; x += stepX) {
+      g.strokeText('ADEOLA FORTUNE ADETOLA', x, y);
+      g.fillText('ADEOLA FORTUNE ADETOLA', x, y);
+    }
+  }
+  g.restore();
+
+  // label strip under the certificate
+  g.fillStyle = '#000';
+  g.fillRect(0, h, w, bar);
+  g.fillStyle = '#ffd20a';
+  g.font = `800 ${Math.round(bar * 0.42)}px Sora, system-ui, sans-serif`;
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.fillText(WATERMARK, w / 2, h + bar / 2, w * 0.94);
+}
+
+function openCertificate(src, title, from) {
+  const box = document.createElement('div');
+  box.className = 'cert';
+  box.setAttribute('role', 'dialog');
+  box.setAttribute('aria-modal', 'true');
+  box.setAttribute('aria-label', title || 'Certificate');
+  box.innerHTML = `
+    <button class="cert__x" type="button" data-cert-x aria-label="Close">&times;</button>
+    <figure class="cert__fig">
+      <div class="cert__stage"><span class="cert__wait">Loading…</span></div>
+      <figcaption class="cert__cap"></figcaption>
+    </figure>`;
+  box.querySelector('.cert__cap').textContent = title || '';
+  document.body.append(box);
+  document.documentElement.style.overflow = 'hidden';
+
+  const finish = () => {
+    removeEventListener('keydown', onKey, true);
+    document.documentElement.style.overflow = '';
+    box.remove();
+    from?.focus({ preventScroll: true });
+  };
+  // Escape closes only this box, not the dashboard behind it
+  const onKey = e => { if (e.key === 'Escape') { e.stopPropagation(); finish(); } };
+  addEventListener('keydown', onKey, true);
+  box.addEventListener('click', e => { if (e.target === box || e.target.closest('[data-cert-x]')) finish(); });
+  box.addEventListener('contextmenu', e => e.preventDefault());
+  box.querySelector('[data-cert-x]').focus({ preventScroll: true });
+
+  const stage = box.querySelector('.cert__stage');
+  const img = new Image();
+  img.onload = async () => {
+    try { await document.fonts?.load('800 20px Sora'); } catch { /* fine, a fallback font is used */ }
+    const canvas = document.createElement('canvas');
+    canvas.className = 'cert__canvas';
+    canvas.setAttribute('role', 'img');
+    canvas.setAttribute('aria-label', title || 'Certificate');
+    paintCertificate(img, canvas);
+    stage.replaceChildren(canvas);
+  };
+  img.onerror = () => { stage.innerHTML = '<span class="cert__wait">Could not load this certificate.</span>'; };
+  img.src = src;
+}
 
 export function initAboutDashboard() {
   let root, body, tabs;
@@ -195,6 +291,8 @@ export function initAboutDashboard() {
     root.addEventListener('error', e => { if (e.target.tagName === 'IMG') e.target.remove(); }, true);
 
     root.addEventListener('click', e => {
+      const zoom = e.target.closest('[data-cert-view]');
+      if (zoom) return openCertificate(zoom.dataset.certView, zoom.dataset.certTitle, zoom);
       if (e.target.closest('[data-sd-close]')) return close();
       const col = e.target.closest('[data-sd-collapse]');
       if (col) {

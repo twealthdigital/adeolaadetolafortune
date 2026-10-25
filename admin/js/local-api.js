@@ -50,12 +50,12 @@ async function seed() {
 async function shrink(file) {
   if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
   const bmp = await createImageBitmap(file);
-  const scale = Math.min(1, 1600 / bmp.width);
+  const scale = Math.min(1, 1280 / bmp.width);
   const c = document.createElement('canvas');
   c.width = Math.round(bmp.width * scale);
   c.height = Math.round(bmp.height * scale);
   c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
-  const blob = await new Promise(res => c.toBlob(res, 'image/webp', 0.85));
+  const blob = await new Promise(res => c.toBlob(res, 'image/webp', 0.72));
   return blob && blob.size < file.size ? blob : file;
 }
 

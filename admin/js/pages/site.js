@@ -34,8 +34,10 @@ export function mount(box, shell) {
       <p class="intro">Change something here once and it updates <b>everywhere</b> it appears on the website.</p>
 
       ${card('Brand', `
-        ${file({ label: 'Logo', path: 'brand.logo', v: m.brand.logo, accept: 'image/*', hint: 'Shown in the website header.' })}
-        ${file({ label: 'Favicon', path: 'brand.favicon', v: m.brand.favicon, accept: 'image/*,.ico', hint: 'The small icon in the browser tab. A square picture works best.' })}
+        <div class="pair">
+          ${file({ label: 'Logo', path: 'brand.logo', v: m.brand.logo, accept: 'image/*', hint: 'Shown in the website header.' })}
+          ${file({ label: 'Favicon', path: 'brand.favicon', v: m.brand.favicon, accept: 'image/*,.ico', hint: 'The small icon in the browser tab. A square picture works best.' })}
+        </div>
         ${text({ label: 'Website title', path: 'brand.title', v: m.brand.title, hint: 'Shown in the browser tab and on Google.' })}
         ${area({ label: 'Website description', path: 'brand.description', v: m.brand.description, rows: 2, hint: 'The short text Google shows under your title.' })}
         ${text({ label: 'Name in the footer', path: 'brand.footer', v: m.brand.footer })}`)}

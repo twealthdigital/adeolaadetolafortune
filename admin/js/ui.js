@@ -61,6 +61,8 @@ const show = (v, as) => (as === 'csv' ? (v || []).join(', ') : as === 'paras' ? 
 /* ---------- file previews ---------- */
 const EXT = { image: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif', 'svg'], video: ['mp4', 'webm', 'mov', 'm4v', 'ogv'] };
 export const extOf = src => {
+  const dm = /^data:[^/;,]+\/([a-z0-9]+)/i.exec(String(src));
+  if (dm) return dm[1].toLowerCase();
   const e = (String(src).split(/[?#]/)[0].split('.').pop() || '').toLowerCase();
   return /^[a-z0-9]{1,5}$/.test(e) ? e : '';
 };
@@ -84,8 +86,8 @@ const asAttr = as => (as ? ` data-as="${as}"` : '');
 
 const ico = (name, cls) => icon(name).replace('<svg ', `<svg class="${cls}" `);
 
-export const text = ({ label, path, v, as, type = 'text', ph = '', hint: h = '', options }) => {
-  const input = `<input type="${type}" data-path="${path}"${asAttr(as)} value="${esc(show(v, as))}" placeholder="${esc(ph)}" autocomplete="off" aria-label="${esc(label)}">`;
+export const text = ({ label, path, v, as, type = 'text', ph = '', hint: h = '', options, max = 0 }) => {
+  const input = `<input type="${type}" data-path="${path}"${asAttr(as)} value="${esc(show(v, as))}" placeholder="${esc(ph)}"${max ? ` maxlength="${max}"` : ''} autocomplete="off" aria-label="${esc(label)}">`;
   if (!options) return `
   <label class="f"><span class="f__label">${esc(label)}</span>
     ${input}
@@ -97,15 +99,16 @@ export const text = ({ label, path, v, as, type = 'text', ph = '', hint: h = '',
       <button type="button" class="ib dd__toggle" tabindex="-1" aria-label="Show suggestions" aria-expanded="false">${icon('down')}</button>
       <div class="dd__menu" role="listbox">
         ${options.map(o => `<button type="button" class="dd__opt" role="option" data-v="${esc(o)}"><span>${esc(o)}</span></button>`).join('')}
-        <p class="dd__empty"${options.length ? ' hidden' : ''}>${options.length ? 'No match. Keep typing to make a new one.' : 'Nothing saved yet. Type to make a new one.'}</p>
+        <p class="dd__empty"${options.length ? ' hidden' : ''}>${options.length ? 'No match. Keep typing and it will be saved as a new one.' : 'Nothing saved yet. Tap Add custom, or just type.'}</p>
+        <button type="button" class="dd__opt dd__add" role="option" data-add>${icon('plus')}<span>Add custom…</span></button>
       </div>
     </div>
     ${hint(h)}</div>`;
 };
 
-export const area = ({ label, path, v, as, rows = 3, ph = '', hint: h = '' }) => `
+export const area = ({ label, path, v, as, rows = 3, ph = '', hint: h = '', max = 0 }) => `
   <label class="f"><span class="f__label">${esc(label)}</span>
-    <textarea data-path="${path}"${asAttr(as)} rows="${rows}" placeholder="${esc(ph)}">${esc(show(v, as))}</textarea>
+    <textarea data-path="${path}"${asAttr(as)} rows="${rows}"${max ? ` maxlength="${max}"` : ''} placeholder="${esc(ph)}">${esc(show(v, as))}</textarea>
     ${hint(h)}</label>`;
 
 export const pick = ({ label, path, v, options, hint: h = '' }) => {
@@ -132,7 +135,7 @@ export const file = ({ label, path, v, accept = '', hint: h = '' }) => `
     <div class="file">
       <div class="file__prev">${preview(v)}</div>
       <div class="file__main">
-        <input type="text" data-path="${path}" value="${esc(v ?? '')}" placeholder="Upload a file, or paste a link" autocomplete="off" aria-label="${esc(label)}">
+        <input type="hidden" data-path="${path}" value="${esc(v ?? '')}">
         <div class="file__btns">
           <button type="button" class="btn btn--sm" data-act="pick">${icon('upload')} Upload</button>
           <button type="button" class="btn btn--sm btn--ghost" data-act="clear"${v ? '' : ' hidden'}>${icon('x')} Remove</button>
@@ -143,6 +146,38 @@ export const file = ({ label, path, v, accept = '', hint: h = '' }) => `
     </div>
     ${hint(h)}
   </div>`;
+
+// A YouTube or Vimeo link. Pasting one fetches the thumbnail by itself and shows it straight away.
+export const video = ({ label, path, thumbPath, v, thumb, hint: h = '' }) => `
+  <div class="f" data-video-field data-thumb-path="${thumbPath}">
+    <span class="f__label">${esc(label)}</span>
+    <div class="vid">
+      <div class="vid__prev">${preview(thumb || '')}</div>
+      <div class="vid__main">
+        <input type="url" data-path="${path}" data-video-input value="${esc(v ?? '')}" placeholder="Paste a YouTube or Vimeo link" autocomplete="off" aria-label="${esc(label)}">
+        <small class="vid__state" aria-live="polite"></small>
+      </div>
+    </div>
+    ${hint(h)}
+  </div>`;
+
+const YT_RE = /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|shorts\/|embed\/|live\/)|youtu\.be\/)([\w-]{11})/;
+const VM_RE = /vimeo\.com\/(?:video\/)?(\d+)/;
+
+// Finds the thumbnail picture for a link (YouTube: instant, Vimeo: asks Vimeo)
+async function videoThumb(link) {
+  const y = link.match(YT_RE);
+  if (y) {
+    const url = `https://i.ytimg.com/vi/${y[1]}/hqdefault.jpg`;
+    await new Promise((ok, no) => { const im = new Image(); im.onload = ok; im.onerror = no; im.src = url; });
+    return url;
+  }
+  const res = await fetch(`https://vimeo.com/api/oembed.json?width=640&url=${encodeURIComponent(link)}`);
+  if (!res.ok) throw new Error('no thumbnail');
+  const j = await res.json();
+  if (!j.thumbnail_url) throw new Error('no thumbnail');
+  return j.thumbnail_url;
+}
 
 export const tools = (path, i, n, what = '') => `
   <div class="tools">
@@ -201,6 +236,49 @@ export function bindForm(root, ctx) {
     wrap.querySelector('.file__prev').innerHTML = preview(src);
     wrap.querySelector('[data-act="clear"]').hidden = !src;
   };
+
+  // YouTube / Vimeo link: the moment one is pasted, go and get its thumbnail
+  const vTimers = new WeakMap();
+  const resolveVideo = async (el, wrap) => {
+    const link = el.value.trim();
+    const prev = wrap.querySelector('.vid__prev');
+    const state = wrap.querySelector('.vid__state');
+    const tp = wrap.dataset.thumbPath;
+    state.classList.remove('is-bad');
+    if (!link) {
+      prev.innerHTML = preview('');
+      state.textContent = '';
+      setPath(ctx.draft(), tp, '');
+      return ctx.changed();
+    }
+    if (!YT_RE.test(link) && !VM_RE.test(link)) {
+      state.textContent = 'That does not look like a YouTube or Vimeo link.';
+      state.classList.add('is-bad');
+      return;
+    }
+    prev.innerHTML = '<span class="prev prev--empty vid__load"></span>';
+    state.textContent = 'Getting the thumbnail…';
+    try {
+      const url = await videoThumb(link);
+      if (el.value.trim() !== link) return;   // the link changed while this was loading
+      setPath(ctx.draft(), tp, url);
+      prev.innerHTML = preview(url);
+      state.textContent = 'Thumbnail added.';
+    } catch {
+      if (el.value.trim() !== link) return;
+      setPath(ctx.draft(), tp, '');
+      prev.innerHTML = preview('');
+      state.textContent = 'Link saved, but its thumbnail could not be loaded.';
+      state.classList.add('is-bad');
+    }
+    ctx.changed();
+  };
+  root.addEventListener('input', e => {
+    const el = e.target;
+    if (!el.matches || !el.matches('[data-video-input]')) return;
+    clearTimeout(vTimers.get(el));
+    vTimers.set(el, setTimeout(() => resolveVideo(el, el.closest('[data-video-field]')), e.inputType === 'insertFromPaste' ? 0 : 500));
+  });
 
   const onEdit = e => {
     const el = e.target;
@@ -302,7 +380,9 @@ const closeAllDd = except => document.querySelectorAll('[data-dd].is-open').forE
 function filterDd(d, q) {
   q = q.trim().toLowerCase();
   let shown = 0;
-  d.querySelectorAll('.dd__opt').forEach(o => {
+  const add = d.querySelector('.dd__add');
+  if (add) add.hidden = !!q;
+  d.querySelectorAll('.dd__opt:not(.dd__add)').forEach(o => {
     const hit = !q || o.textContent.toLowerCase().includes(q);
     o.hidden = !hit;
     if (hit) shown++;
@@ -340,6 +420,14 @@ document.addEventListener('click', e => {
   const d = e.target.closest('[data-dd]');
   if (!d) return closeAllDd();
   const opt = e.target.closest('.dd__opt');
+  if (opt && opt.matches('.dd__add')) {
+    const input = d.querySelector('input');
+    input.value = '';
+    input.placeholder = 'Type your new one, then save';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.focus();
+    return closeDd(d);
+  }
   if (opt) return chooseDd(d, opt);
   if (e.target.closest('.dd__btn, .dd__toggle')) {
     if (d.classList.contains('is-open')) closeDd(d); else openDd(d);

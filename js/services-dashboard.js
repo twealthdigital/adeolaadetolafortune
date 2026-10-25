@@ -1,7 +1,7 @@
 // "View all my services" dashboard: a panel that sits under the header and covers the page.
 // Left: the services. Right: samples as boxes, with category filters. Content comes from data/services.js.
 import { getContent } from './content.js';
-import { mediaInner, attachmentsHTML } from './components/media.js';
+import { mediaInner, attachmentsHTML, videoFacade } from './components/media.js';
 
 const ICONS = {
   all: '<rect x="3" y="3" width="8" height="10" rx="2"/><rect x="13" y="3" width="8" height="6" rx="2"/><rect x="3" y="15" width="8" height="6" rx="2"/><rect x="13" y="11" width="8" height="10" rx="2"/>',
@@ -49,13 +49,13 @@ export function initServicesDashboard() {
       <div class="sd__thumb">
         <span class="sd__thumb-ico">${svg(s.service.icon)}</span>
         <span class="sd__thumb-ini" aria-hidden="true">${esc(initials(s.title))}</span>
-        ${s.file ? mediaInner(s.file, s.title, s.poster) : ''}
+        ${s.video ? videoFacade(s.video, s.videoThumb, s.title) : s.file ? mediaInner(s.file, s.title, s.poster, false) : ''}
         ${s.image ? `<img src="${esc(s.image)}" alt="Preview of ${esc(s.title)}" loading="lazy" draggable="false">` : ''}
-        ${s.link ? `<iframe class="sd__live" src="${esc(s.link)}" title="Live preview of ${esc(s.title)}" loading="lazy" tabindex="-1" scrolling="no" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>` : ''}
+        ${s.link && !s.file && !s.image && !s.video ? `<iframe class="sd__live" src="${esc(s.link)}" title="Live preview of ${esc(s.title)}" loading="lazy" tabindex="-1" scrolling="no" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>` : ''}
       </div>
       <div class="sd__info">
         <div class="sd__chips">
-          <span class="sd__chip sd__chip--cat">${esc(s.category)}</span>
+          <span class="sd__chip sd__chip--cat" title="${esc(s.category)}">${esc(s.category)}</span>
           ${view === 'all' ? `<span class="sd__chip">${esc(s.service.title)}</span>` : ''}
         </div>
         <h4 class="sd__name">${esc(s.title)}</h4>
@@ -101,7 +101,7 @@ export function initServicesDashboard() {
         ${cats.length > 1 ? `
           <div class="sd__filters" role="group" aria-label="Filter by category">
             <button class="sd__filter" type="button" data-cat="all" aria-pressed="true">All</button>
-            ${cats.map(c => `<button class="sd__filter" type="button" data-cat="${esc(c)}" aria-pressed="false">${esc(c)}</button>`).join('')}
+            ${cats.map(c => `<button class="sd__filter" type="button" data-cat="${esc(c)}" title="${esc(c)}" aria-pressed="false">${esc(c)}</button>`).join('')}
           </div>` : ''}
         <p class="sd__count" aria-live="polite"></p>
       </div>

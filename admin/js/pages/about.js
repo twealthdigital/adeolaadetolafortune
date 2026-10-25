@@ -88,8 +88,10 @@ export function mount(box, shell) {
                 ${text({ label: 'Issued by', path: `${p}.issuer`, v: c.issuer, ph: 'e.g. Coursera' })}
                 ${text({ label: 'Year', path: `${p}.year`, v: c.year, ph: '2025' })}
               </div>
-              ${file({ label: 'Certificate image or PDF', path: `${p}.file`, v: c.file })}
-              ${file({ label: 'Cover image (optional)', path: `${p}.poster`, v: c.poster, accept: 'image/*', hint: 'Thumbnail when the main file is a PDF.' })}
+              <div class="pair">
+                ${file({ label: 'Certificate image or PDF', path: `${p}.file`, v: c.file })}
+                ${file({ label: 'Cover image (optional)', path: `${p}.poster`, v: c.poster, accept: 'image/*', hint: 'Thumbnail when the main file is a PDF.' })}
+              </div>
               <div class="sub"><h3>Download files <small>optional</small></h3>
                 ${(c.files || []).map((a, k) => `
                   <div class="row"><div class="row__fields">
