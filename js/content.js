@@ -45,15 +45,12 @@ export function renderServices(items) {
   if (!track || !Array.isArray(items) || !items.length) return;
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const fallback = { web: 'web.png', ai: 'ai.png', mobile: 'mobile.png', uiux: 'mobile.png' };
-  const covers = s => {
-    const list = [s.cover, s.cover2, s.cover3].filter(Boolean);
-    return list.length ? list : [fallback[s.id] ? `/assets/images/services.images/${fallback[s.id]}` : '/assets/images/fortune-portrait.webp'];
-  };
+  const cover = s => s.cover || (fallback[s.id] ? `/assets/images/services.images/${fallback[s.id]}` : '/assets/images/fortune-portrait.webp');
   track.innerHTML = items.map(s => `
     <li class="svc">
       <h3 class="svc__label">${esc(s.title)}</h3>
       <div class="svc__stage">
-        ${covers(s).map((src, n) => `<img class="svc__img" src="${esc(src)}" alt="Preview ${n + 1} of ${esc(s.title)}" width="480" height="300" loading="lazy" draggable="false">`).join('')}
+        <img class="svc__img" src="${esc(cover(s))}" alt="Preview of ${esc(s.title)}" width="800" height="700" loading="lazy" draggable="false">
         <button class="svc__go" type="button" aria-label="Explore ${esc(s.title)}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
         </button>

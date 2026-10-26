@@ -70,13 +70,9 @@ export function mount(box, shell) {
           ${pick({ label: 'Icon', path: `list.${i}.icon`, v: s.icon, options: ICON_OPTIONS })}
         </div>
         <div class="f">
-          <span class="f__label">Homepage card images (up to 3)</span>
-          <div class="trio">
-            ${file({ label: 'Image 1', path: `list.${i}.cover`, v: s.cover, accept: 'image/*' })}
-            ${file({ label: 'Image 2', path: `list.${i}.cover2`, v: s.cover2, accept: 'image/*' })}
-            ${file({ label: 'Image 3', path: `list.${i}.cover3`, v: s.cover3, accept: 'image/*' })}
-          </div>
-          <small class="f__hint">Shown on this service card in the homepage carousel. Image 1 is in front, 2 and 3 fan out behind it.</small>
+          <span class="f__label">Homepage card image</span>
+          ${file({ label: 'Card image', path: `list.${i}.cover`, v: s.cover, accept: 'image/*' })}
+          <small class="f__hint">Shown on this service card in the homepage carousel. Use an 800×700 WebP, under 100 KB.</small>
         </div>
         ${area({ label: 'Short description', path: `list.${i}.blurb`, v: s.blurb, rows: 2, hint: 'Shown at the top of this service for visitors.' })}
       </div>
