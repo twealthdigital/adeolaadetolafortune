@@ -218,6 +218,6 @@ export async function renderLogin(app, { message = '', onSuccess }) {
   // ---------- which screen first? ----------
   const dev = device.get();
   if (!setup) setupScreen();
-  else if (dev.email && !dev.locked) emailScreen(dev.email);
-  else fullScreen(dev.email || '');
+  else if (dev.locked) fullScreen(dev.email || '');
+  else emailScreen(dev.email || '');
 }
