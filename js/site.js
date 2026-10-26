@@ -58,11 +58,12 @@ export const SITE_DEFAULTS = {
 const isObj = v => v && typeof v === 'object' && !Array.isArray(v);
 
 // Saved values win. An empty value falls back to the default, and lists (socials, tags) are taken as saved.
-function merge(base, over) {
-  if (!isObj(base)) return over === undefined || over === null || over === '' ? base : over;
+const NEVER_EMPTY = ['brand.logo', 'brand.favicon', 'hero.photo'];   // pictures: an empty value would leave a broken image
+function merge(base, over, path = '') {
+  if (!isObj(base)) return over === undefined || over === null || (over === '' && NEVER_EMPTY.includes(path)) ? base : over;
   const out = {};
   for (const k of Object.keys(base)) {
-    out[k] = Array.isArray(base[k]) ? (Array.isArray(over && over[k]) ? over[k] : base[k]) : merge(base[k], over && over[k]);
+    out[k] = Array.isArray(base[k]) ? (Array.isArray(over && over[k]) ? over[k] : base[k]) : merge(base[k], over && over[k], path ? `${path}.${k}` : k);
   }
   return out;
 }
@@ -111,7 +112,7 @@ export function applySite(content) {
   document.querySelector('meta[name="description"]')?.setAttribute('content', site.brand.description);
 
   // Text, images and links tied to a setting: data-bind, data-bind-src, data-bind-href
-  all('[data-bind]').forEach(el => { const v = get(site, el.dataset.bind); if (v) el.textContent = v; });
+  all('[data-bind]').forEach(el => { const v = get(site, el.dataset.bind); if (v != null) el.textContent = v; });
   all('[data-bind-src]').forEach(el => { const v = get(site, el.dataset.bindSrc); if (v) el.src = v; });
   all('[data-bind-href]').forEach(el => {
     const v = get(site, el.dataset.bindHref);
@@ -144,7 +145,7 @@ export function applySite(content) {
 
   // Home About text follows the About page (first paragraph)
   const head = document.querySelector('[data-about-headline]');
-  if (head && site.about.headline) head.innerHTML = highlight(site.about.headline);
+  if (head) head.innerHTML = highlight(site.about.headline);
   const body = document.querySelector('[data-about-text]');
   if (body && Array.isArray(about.bio) && about.bio[0]) body.textContent = about.bio[0];
 
