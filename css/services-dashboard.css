@@ -494,3 +494,20 @@ section:has(> .ab__chips) > .ab__h { color: var(--yellow); }
 .sd__filter { max-width: min(220px, 70vw); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .sd__chips { min-width: 0; }
 .sd__chip { min-width: 0; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Sample thumbnails: show the WHOLE image, no crop and no dark gaps.
+   The box now takes the image's own shape. Videos, PDFs, live previews and
+   the About cards keep their current look. */
+.sd__thumb:not(.ab__cert):has(> img) {
+  display: block;
+  aspect-ratio: auto;
+  min-height: 140px;            /* keeps a tidy box while the image loads */
+}
+.sd__thumb:not(.ab__cert) > img {
+  position: static;
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+.sd__thumb:not(.ab__cert):has(> img) .sd__thumb-ini { display: none; }
