@@ -528,5 +528,3 @@ section:has(> .ab__chips) > .ab__h { color: var(--yellow); }
 .sd__thumb:not(.ab__cert) > .md__video { object-fit: contain; background: #000; }
 .sd__thumb:not(.ab__cert) > .vf .vf__img { object-fit: contain; background: #000; }
 
-/* A video card keeps its own height. It no longer stretches to match a taller project card beside it. */
-.sd__card:has(.md__video, .vf) { align-self: start; }
