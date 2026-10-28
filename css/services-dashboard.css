@@ -511,3 +511,19 @@ section:has(> .ab__chips) > .ab__h { color: var(--yellow); }
   object-fit: contain;
 }
 .sd__thumb:not(.ab__cert):has(> img) .sd__thumb-ini { display: none; }
+
+/* Sample thumbnails: every image and video gets the same box.
+   The box follows the card width (aspect-ratio), so it scales on phones, tablets and desktops. */
+.sd__thumb:not(.ab__cert):has(> img, > video, > .vf, > .md__fill) {
+  display: block;
+  aspect-ratio: 1400 / 1574;
+  min-height: 0;
+}
+.sd__thumb:not(.ab__cert):has(> img, > video, > .vf, > .md__fill) .sd__thumb-ini { display: none; }
+
+/* Pictures fill the box */
+.sd__thumb:not(.ab__cert) > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+
+/* Videos sit in the middle of the box with black space above and below */
+.sd__thumb:not(.ab__cert) > .md__video { object-fit: contain; background: #000; }
+.sd__thumb:not(.ab__cert) > .vf .vf__img { object-fit: contain; background: #000; }
